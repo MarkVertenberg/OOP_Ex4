@@ -1,21 +1,16 @@
 import math
-
 import pygame
 
-from src.DiGraph import Node
-from src.graphics.Text import Text
+from Text import Text
+from Scale import Scale
+from Colors import *
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-SKY_BLUE = (75, 118, 229)
-LIGHT_YELLOW = (255, 253, 126)
+SCALER = Scale()
 
 
 class NodePainter:
 
     def __init__(self, node: Node, radius=15, outline=2, color=LIGHT_YELLOW):
-        from src.graphics.Scale import Scale
         self.node = node
         self.out_edges = []
         self.radius = radius
@@ -23,10 +18,8 @@ class NodePainter:
         self.color = color
         self.text = Text(node.get_x(), node.get_y(), str(self.node.get_value()))
         self.over = False
-        self.scaler = Scale()
         self.new_x = None
         self.new_y = None
-        self.dest = None
 
     def handle_event(self, event):
         pos = pygame.mouse.get_pos()
@@ -37,9 +30,8 @@ class NodePainter:
                 self.over = False
 
     def draw(self, screen, start_x, start_y, original_width, original_height, graph, outline=2):
-        self.scaler.__init__(start_x + outline, start_y + outline, original_width - outline, original_height - outline,
-                             graph, self)
-        self.new_x, self.new_y = self.scaler.scale_node()
+        SCALER.__init__(start_x + outline, start_y + outline, original_width - outline, original_height - outline, graph, self)
+        self.new_x, self.new_y = SCALER.scale_node()
         self.text.x = self.new_x
         self.text.y = self.new_y
         pygame.draw.circle(screen, BLACK, (self.new_x, self.new_y), self.radius + outline)
@@ -54,13 +46,6 @@ class NodePainter:
         self.update_edges(graph)
         for edge in self.out_edges:
             edge.draw(screen)
-        if self.dest is not None:
-            for edge in self.out_edges:
-                if edge.dest.node.value == self.dest:
-                    edge.draw(screen, 4)
-
-    def set_radius(self, radius):
-        pass
 
     def get_radius(self):
         return self.radius
@@ -74,7 +59,7 @@ class NodePainter:
         return math.pow(a, 2) + math.pow(b, 2) <= math.pow(self.radius, 2)
 
     def update_edges(self, graph):
-        from src.graphics.EdgePainter import EdgePainter
+        from EdgePainter import EdgePainter
         self.out_edges = []
         if self.node:
             for dest in list(self.node.outWard.keys()):

@@ -5,7 +5,6 @@ from pygame import gfxdraw
 import pygame
 from pygame import *
 
-from client_python.DiGraph import DiGraph
 
 
 class game():

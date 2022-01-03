@@ -1,19 +1,20 @@
-from src.GraphInterface import GraphInterface
-from src.graphics.NodePainter import NodePainter
+from GraphInterface import GraphInterface
+from NodePainter import NodePainter
 
 
 class Scale:
 
-    def __init__(self, start_x=0, start_y=0, original_width=0, original_height=0, graph: GraphInterface = None, node: NodePainter = None):
+    def __init__(self, start_x=0, start_y=0, original_width=0, original_height=0, graph: GraphInterface = None, obj=None):
         self.original_width = original_width
         self.original_height = original_height
         self.graph = graph
-        self.node = node
+        self.obj = obj
         self.start_x = start_x
         self.start_y = start_y
-        if node:
-            self.start_x += node.radius
-            self.start_y += node.radius
+        if obj:
+            if type(obj) == NodePainter:
+                self.start_x += obj.radius
+                self.start_y += obj.radius
         if self.graph:
             self.min_x, self.max_x, self.min_y, self.max_y = self.find_min_and_max()
             self.pixel_x, self.pixel_y = self.calculate_pixel()

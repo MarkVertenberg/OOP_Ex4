@@ -2,10 +2,9 @@ import math
 
 import pygame.draw
 
-from src.graphics.NodePainter import NodePainter
-from src.graphics.Text import Text
-
-BLACK = (0, 0, 0)
+from NodePainter import NodePainter
+from Text import Text
+from Colors import *
 
 
 class EdgePainter:
@@ -45,9 +44,6 @@ class EdgePainter:
             pygame.draw.line(screen, self.color, (self.start_x, self.start_y), (self.stop_x, self.stop_y), outline)
             triangle = self.triangle_pos(self.dest.radius * 0.8)
             pygame.draw.polygon(screen, self.color, triangle)
-            #self.text.x = str(triangle[2][0])
-            #self.text.y = str(triangle[2][1])
-            #self.text.draw(screen, True)
 
     def triangle_pos(self, height_tmp):
         dx = self.stop_x - self.start_x
@@ -91,4 +87,3 @@ class EdgePainter:
             x_2 = temp_x - w
             y_2 = temp_y + h
             return [(x_1, y_1), (self.stop_x, self.stop_y), (x_2, y_2)]
-
