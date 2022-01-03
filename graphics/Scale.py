@@ -1,4 +1,4 @@
-from GraphInterface import GraphInterface
+from OOP_Ex4.client_python.GraphInterface import GraphInterface
 from NodePainter import NodePainter
 
 
@@ -24,8 +24,8 @@ class Scale:
             self.pixel_x = 0.00001
         if self.pixel_y == 0:
             self.pixel_y = 0.00001
-        new_x = ((self.node.node.get_x() - self.min_x) / self.pixel_x) + self.start_x
-        new_y = ((self.node.node.get_y() - self.min_y) / self.pixel_y) + self.start_y
+        new_x = ((self.obj.node.get_x() - self.min_x) / self.pixel_x) + self.start_x
+        new_y = ((self.obj.node.get_y() - self.min_y) / self.pixel_y) + self.start_y
         return new_x, new_y
 
     def find_min_and_max(self):
@@ -48,6 +48,6 @@ class Scale:
             return min_rage_x, max_range_x, min_rage_y, max_range_y
 
     def calculate_pixel(self):
-        pixel_x = (self.max_x - self.min_x) / (self.original_width - self.start_x - self.node.get_radius())
-        pixel_y = (self.max_y - self.min_y) / (self.original_height - self.start_y - self.node.get_radius())
+        pixel_x = (self.max_x - self.min_x) / (self.original_width - self.start_x - self.obj.get_radius())
+        pixel_y = (self.max_y - self.min_y) / (self.original_height - self.start_y - self.obj.get_radius())
         return pixel_x, pixel_y

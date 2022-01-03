@@ -4,7 +4,7 @@ import pygame
 from Text import Text
 from Scale import Scale
 from Colors import *
-
+from OOP_Ex4.client_python.DiGraph import Node
 SCALER = Scale()
 
 
@@ -63,7 +63,4 @@ class NodePainter:
         self.out_edges = []
         if self.node:
             for dest in list(self.node.outWard.keys()):
-                color = BLACK
-                if self.dest and self.dest == dest:
-                    color = GREEN
-                self.out_edges.append(EdgePainter(self, graph.get_all_v().get(dest).painter, self.node.outWard.get(dest), color))
+                self.out_edges.append(EdgePainter(self, graph.get_all_v().get(dest).painter, self.node.outWard.get(dest), self.color))
