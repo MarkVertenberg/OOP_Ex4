@@ -1,44 +1,20 @@
-from types import SimpleNamespace
-from client import Client
-import json
-from pygame import gfxdraw
-import pygame
-from pygame import *
 
+import json
+
+from client_python.GraphAlgo import GraphAlgo
 from client_python.DiGraph import DiGraph
 
-
 class game():
-
-    def __init__(self, graph=DiGraph()):
+    def __init__(self, GraphAlgo=GraphAlgo, graph=DiGraph):
+        self.Graphalgo = GraphAlgo
         self.graph = graph
         self.agent = []
         self.pokemon = []
 
-    """
-    pokemons = json.loads(client.get_pokemons(),
-                          object_hook=lambda d: SimpleNamespace(**d)).Pokemons
-    pokemons = [p.Pokemon for p in pokemons]
-    for p in pokemons:
-        x, y, _ = p.pos.split(',')
-        p.pos = SimpleNamespace(x=my_scale(float(x), x=True), y=my_scale(float(y), y=True))
-    agents = json.loads(client.get_agents(),
-                        object_hook=lambda d: SimpleNamespace(**d)).Agents
-    agents = [agent.Agent for agent in agents]
-    for a in agents:
-        x, y, _ = a.pos.split(',')
-        a.pos = SimpleNamespace(x=my_scale(
-            float(x), x=True), y=my_scale(float(y), y=True))
-    # check events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit(0)
-            """
     def pokemon(self, pokemon_list):
         json_pokemons = json.loads(pokemon_list)
         for p in json_pokemons['Pokemons']:
-            self.apokemon.append(pokemon(p['Pokemon']))
+            self.pokemon.append(pokemon(p['Pokemon']))
 
     def agent(self,agent_list):
          json_agent = json.loads(agent_list)
@@ -70,7 +46,7 @@ class game():
         return True
 
 class Agents:
- def __init__(self, info: tuple):
+ def __init__(self, info: dict):
         self.id = int(info['id'])
         self.value = float(info['value'])
         self.src = int(info['src'])
@@ -82,29 +58,8 @@ class Agents:
         for s in loc:
             self.location.append(float(s))
 
- """
-                        "Agent":
-                        {
-                            "id":0,
-                            "value":0.0,
-                            "src":0,
-                            "dest":1,
-                            "speed":1.0,
-                            "pos":"35.18753053591606,32.10378225882353,0.0"
-                        }
-            """
 class pokemon:
-     """
-     "Pokemons": [
-         {
-             "Pokemon": {
-                 "value": 5.0,
-                 "type": -1,
-                 "pos": "35.197656770719604,32.10191878639921,0.0"
-             }
-     """
-
-     def __init__(self, info: tuple):
+ def __init__(self, info: dict):
          self.value = float(info['value'])
          self.type = int(info['type'])
          pos = str(info['pos'])
