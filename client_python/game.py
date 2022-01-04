@@ -107,6 +107,17 @@ class Game():
            if a.pokemon is None:
                self.find_best_pokemon(a)
 
+    def client(self, client: client):
+        for agent in self.agents.values():
+            if agent.dest == -1:
+                next_node = (agent.src - 1) % len(GraphAlgo.get_graph().Nodes)
+                client.choose_next_edge(
+                    '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
+                ttl = client.time_to_end()
+                print(ttl, client.get_info())
+
+        client.move()
+
 
 
 
@@ -135,8 +146,8 @@ class pokemon:
         self.location = (loc[0], loc[1])
         self.x = loc[0]
         self.y = loc[1]
-        self.src = self.src_node()
-        self.dest = self.dest_node()
+        self.src = 0
+        self.dest = 0
         self.agent = None
 
     def dist_pok_from_ver(self, ver: Node):
