@@ -33,17 +33,22 @@ This project is a concluding assignment of the Object Oriented Programming (OOP)
     - Should show the time to end in seconds.
     - Should have a “stop” button to gracefully stop the game at any time point.
 
+
 # Algorithm:
 
+
 # UML:
+
 
 # Report results:
 **The results can be seen in the attached WIKI file.**  
 Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki/Report-results
 
+
 # How to play?
 **Guidance and explanation can be found on the attached WIKI file.**    
 Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki/How-to-play%3F
+
 
 # Helpful Links:
 
