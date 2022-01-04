@@ -39,7 +39,7 @@ This project is a concluding assignment of the Object Oriented Programming (OOP)
 
 # Report results:
 **The results can be seen in the attached WIKI file.**  
-Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki
+Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki/Report-results
 
 # Helpful Links:
 
