@@ -5,7 +5,7 @@ In this project we had to realize the "Pokemon game".
 
 ![image](https://user-images.githubusercontent.com/93255163/148103741-6767c48e-07fc-445c-8319-b2eeab5fbffc.png)
 
-- # Rules of the Game:
+- # About the game:
 
 * The game consists of 16 stages [0-15].
 * At each stage a different number of Pokemon and agents.
