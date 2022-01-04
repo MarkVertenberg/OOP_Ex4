@@ -1,9 +1,10 @@
 import pygame
 from Text import Text
 from Colors import *
+from api.ScreenObjectInterface import ScreenObjectInterface
 
 
-class Button:
+class Button(ScreenObjectInterface):
     """
         Class that representing a button in pygame.
     """
@@ -32,7 +33,6 @@ class Button:
                 self.color = not_over_color
 
     def draw(self, screen, outline=None):
-        """ draw the button on the screen """
         if outline:
             pygame.draw.rect(screen, BLACK, (self.x, self.y, self.width, self.height), outline)
             pygame.draw.rect(screen, self.color, (self.x + outline, self.y + outline, self.width - (outline * 2), self.height - (outline * 2)))
@@ -42,11 +42,9 @@ class Button:
         if self.text != '':
             self.text.x = self.x + (self.width / 2)
             self.text.y = self.y + (self.height / 2)
-            self.text.draw(screen)
+            self.text.draw(screen, )
 
     def is_over(self, pos):
-        """ Pos is the mouse position or a tuple of (x,y) coordinates,
-            returns if the pos is over this button """
         if self.x < pos[0] < self.x + self.width:
             if self.y < pos[1] < self.y + self.height:
                 return True

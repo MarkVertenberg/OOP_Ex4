@@ -3,19 +3,16 @@ import math
 import pygame.draw
 
 from NodePainter import NodePainter
-from Text import Text
 from Colors import *
 
 
 class EdgePainter:
 
-    def __init__(self, src: NodePainter, dest: NodePainter, weight, color=BLACK):
+    def __init__(self, src: NodePainter, dest: NodePainter, color=BLACK):
         self.src = src
         self.dest = dest
         self.start_x, self.start_y, self.stop_x, self.stop_y = self.start_pos()
         self.color = color
-        self.text = Text(None, None, weight)
-        self.over = False
 
     def start_pos(self):
         if self.dest.new_x and self.dest.new_y:

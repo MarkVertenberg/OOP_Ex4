@@ -4,7 +4,7 @@ from NodePainter import NodePainter
 
 class Scale:
 
-    def __init__(self, start_x=0, start_y=0, original_width=0, original_height=0, graph: GraphInterface = None, obj=None):
+    def __init__(self, start_x=0, start_y=0, original_width=0, original_height=0, graph: GraphInterface = None):
         self.original_width = original_width
         self.original_height = original_height
         self.graph = graph
@@ -17,7 +17,7 @@ class Scale:
                 self.start_y += obj.radius
         if self.graph:
             self.min_x, self.max_x, self.min_y, self.max_y = self.find_min_and_max()
-            self.pixel_x, self.pixel_y = self.calculate_pixel()
+            self.pixel_x, self.pixel_y = self.__calculate_pixel()
 
     def scale_node(self):
         if self.pixel_x == 0:
@@ -47,7 +47,7 @@ class Scale:
                         min_rage_y = node.get_y()
             return min_rage_x, max_range_x, min_rage_y, max_range_y
 
-    def calculate_pixel(self):
+    def __calculate_pixel(self):
         pixel_x = (self.max_x - self.min_x) / (self.original_width - self.start_x - self.obj.get_radius())
         pixel_y = (self.max_y - self.min_y) / (self.original_height - self.start_y - self.obj.get_radius())
         return pixel_x, pixel_y

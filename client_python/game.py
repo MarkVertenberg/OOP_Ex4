@@ -92,6 +92,7 @@ class Agents:
                             "pos":"35.18753053591606,32.10378225882353,0.0"
                         }
             """
+
 class pokemon:
      """
      "Pokemons": [

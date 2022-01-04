@@ -57,7 +57,7 @@ class GraphGUI:
         if graph:
             nodes = graph.get_all_v().values()
             for node in nodes:
-                node.painter.draw(self.screen, outline, outline, width - outline, height - outline, graph)
+                node.painter.draw(self.screen, )
 
     def show_buttons(self, buttons: List[Button]):
         for button in buttons:

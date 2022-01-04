@@ -17,7 +17,7 @@ class Dijkstra:
         self.shortest_dist_from_src: dict = {}
         self.previous_node: dict = {}
 
-    def reset(self, graph: GraphInterface, src_id: int):
+    def __reset(self, graph: GraphInterface, src_id: int):
         """ Updates the data to current graph and node. """
         self.un_visited = list(graph.get_all_v().keys())
         self.shortest_dist_from_src = {}
@@ -31,9 +31,9 @@ class Dijkstra:
         """ Dijkstra's algorithm """
         if graph is None or not graph.get_all_v().keys().__contains__(src_id):
             raise ValueError("source node not exist")
-        self.reset(graph, src_id)
+        self.__reset(graph, src_id)
         while self.un_visited.__len__() != 0:
-            curr_node = self.min_dist_in_un_visited()
+            curr_node = self.__min_dist_in_un_visited()
             out_edges = graph.all_out_edges_of_node(curr_node)
             if out_edges:
                 for dest in list(out_edges.keys()):
@@ -44,7 +44,7 @@ class Dijkstra:
                             self.previous_node[dest] = curr_node
             self.un_visited.remove(curr_node)
 
-    def min_dist_in_un_visited(self):
+    def __min_dist_in_un_visited(self):
         """ Finds the minimum distance to src from unvisited nodes """
         minimum = self.un_visited[0]
         for node in self.un_visited:
