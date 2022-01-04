@@ -1,3 +1,4 @@
+import math
 from os import name
 from types import SimpleNamespace
 from client import Client
@@ -7,11 +8,14 @@ import pygame
 from pygame import *
 from client_python.GraphAlgo import GraphAlgo
 from client_python.DiGraph import DiGraph
+from client_python.DiGraph import Node
 import graphics
+lamda = 0.001
 
 
 # init pygame
 WIDTH, HEIGHT = 1080, 720
+
 
 # default port
 PORT = 6666
@@ -21,36 +25,23 @@ HOST = '127.0.0.1'
 client = Client()
 
 
+
+
+
 class Game():
     def __init__(self, GraphAlgo=GraphAlgo):
         self.Graphalgo = GraphAlgo
         self.agents = self.agent
         self.pokemons = []
         self.unit = []
-        self.free = []
+
         
-    def run_game():
+    def run_game(self):
         pygame.init()
         screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
         clock = pygame.time.Clock()
         pygame.font.init()
         
-
-    def free_agents(self):
-         visited = [False] * len(self.agents)
-         for agent in self.agents:
-             
-
-    def allocate_pokemon(self): 
-        list = {}
-        i = 0
-        for agent in self.agents:
-            list.pop(agent,pokemon[i])
-        i = i+1    
-             
-        pass
-
-
 
 
     """
@@ -79,11 +70,34 @@ class Game():
         for p in json_pokemons['Pokemons']:
             self.pokemons.append(pokemon(p['Pokemon']))
 
-    def agent(self,agent_list):
+    def agent(self, agent_list):
         json_agent = json.loads(agent_list)
         self.agents = []
         for e in json_agent['Agents']:
             self.agents.append(Agents(e['Agent']))
+
+    def find_src_dest_of_pok(self, pok: pokemon):
+        for ver1 in self.Graphalgo.get_graph():
+            for ver2 in self.Graphalgo.get_graph():
+             loc1 = self.dist_of_2_ver(ver1, ver2)
+             loc2 = pok.dist_pok_from_ver(ver1)
+             loc3 = pok.dist_pok_from_ver(ver2)
+             loc4 = loc2+loc3
+             if abs(loc1-loc4) <= lamda:
+                 pok.src = min(ver1.x, ver2.y)
+                 pok.dest = max(ver1.y, ver2.y)
+
+
+
+
+
+
+
+    def dist_of_2_ver(self,ver1: Node, ver2: Node):
+        x_v = pow((ver1.x - ver2.x), 2)
+        y_v = pow(ver1.y - ver2.y, 2)
+        dist = math.sqrt(x_v + y_v)
+        return dist
 
 
 class Agents:
@@ -131,6 +145,14 @@ class pokemon:
         self.location = (loc[0], loc[1])
         self.src = self.src_node()
         self.dest = self.dest_node()
+
+
+    def dist_pok_from_ver(self, ver: Node):
+        x_v = pow((self.location[0] - ver.x), 2)
+        y_v = pow(self.location[1] - ver.y, 2)
+        dist = math.sqrt(x_v + y_v)
+        return dist
+
     
     def src_node(self):
         pass
