@@ -8,13 +8,8 @@ class Scale:
         self.original_width = original_width
         self.original_height = original_height
         self.graph = graph
-        self.obj = obj
         self.start_x = start_x
         self.start_y = start_y
-        if obj:
-            if type(obj) == NodePainter:
-                self.start_x += obj.radius
-                self.start_y += obj.radius
         if self.graph:
             self.min_x, self.max_x, self.min_y, self.max_y = self.find_min_and_max()
             self.pixel_x, self.pixel_y = self.__calculate_pixel()

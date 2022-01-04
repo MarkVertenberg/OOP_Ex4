@@ -4,7 +4,7 @@ class Scalable:
         Interface that representing scalable object
     """
 
-    def scale(self, x: float, y: float) -> (float, float):
+    def scale(self, x: float, y: float) -> tuple(float, float):
         """
             Scales the object according to width and height.
         """

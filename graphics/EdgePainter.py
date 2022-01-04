@@ -4,9 +4,9 @@ import pygame.draw
 
 from NodePainter import NodePainter
 from Colors import *
+from api.ScreenObjectInterface import ScreenObjectInterface
 
-
-class EdgePainter:
+class EdgePainter(ScreenObjectInterface):
 
     def __init__(self, src: NodePainter, dest: NodePainter, color=BLACK):
         self.src = src

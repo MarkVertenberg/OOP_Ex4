@@ -16,6 +16,7 @@ class ScreenObjectInterface:
             Handles the event.
             @param event: pygame event type
         """
+        raise NotImplementedError
 
     def is_over(self, pos: tuple) -> bool:
         """

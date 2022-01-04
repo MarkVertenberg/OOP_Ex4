@@ -14,7 +14,11 @@ class Text(ScreenObjectInterface):
         self.text = text
         self.color = color
 
+    def handle_event(self, event):
+        pass
+    
     def draw(self, screen, outline=None):
         font = pygame.font.SysFont(self.font, self.size)
         text = font.render(self.text, True, self.color)
         screen.blit(text, (self.x - text.get_width() / 2, self.y - text.get_height() / 2))
+

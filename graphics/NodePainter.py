@@ -10,7 +10,7 @@ from api import *
 SCALER = Scale()
 
 
-class NodePainter(ScreenObjectInterface):
+class NodePainter(ScreenObjectInterface, Scalable):
 
     def __init__(self, node: Node, radius=15, outline=2, color=LIGHT_YELLOW):
         self.node = node
@@ -19,9 +19,11 @@ class NodePainter(ScreenObjectInterface):
         self.outline = outline
         self.color = color
         self.text = Text(node.get_x(), node.get_y(), str(self.node.get_value()))
-        self.over = False
         self.new_x = None
         self.new_y = None
+
+    def handle_event(self, event) -> None:
+        pass
 
     def draw(self, screen, outline=2):
         SCALER.__init__(start_x + outline, start_y + outline, original_width - outline, original_height - outline, graph, self)
@@ -39,7 +41,7 @@ class NodePainter(ScreenObjectInterface):
 
         self.update_edges(graph)
         for edge in self.out_edges:
-            edge.draw(screen, )
+            edge.draw(screen)
 
     def get_radius(self):
         return self.radius
