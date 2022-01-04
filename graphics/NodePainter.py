@@ -1,13 +1,10 @@
-import math
 import pygame
 
+from OOP_Ex4.graphics import Scale
 from Text import Text
-from Scale import Scale
 from Colors import *
 from OOP_Ex4.client_python.DiGraph import Node
 from api import *
-
-SCALER = Scale()
 
 
 class NodePainter(ScreenObjectInterface, Scalable):
@@ -26,22 +23,25 @@ class NodePainter(ScreenObjectInterface, Scalable):
         pass
 
     def draw(self, screen, outline=2):
-        SCALER.__init__(start_x + outline, start_y + outline, original_width - outline, original_height - outline, graph, self)
-        self.new_x, self.new_y = SCALER.scale_node()
-        self.text.x = self.new_x
-        self.text.y = self.new_y
-        pygame.draw.circle(screen, BLACK, (self.new_x, self.new_y), self.radius + outline)
-        if self.over:
-            pygame.draw.circle(screen, WHITE, (self.new_x, self.new_y), self.radius)
-            self.text.text = "(" + str(self.node.get_x()) + "," + str(self.node.get_y()) + ")"
-        else:
-            pygame.draw.circle(screen, self.color, (self.new_x, self.new_y), self.radius)
-            self.text.text = str(self.node.get_value())
-        self.text.draw(screen, )
+        if self.new_x and self.new_y:
+            self.text.x = self.new_x
+            self.text.y = self.new_y
+            pygame.draw.circle(screen, BLACK, (self.new_x, self.new_y), self.radius + outline)
 
-        self.update_edges(graph)
-        for edge in self.out_edges:
-            edge.draw(screen)
+            for edge in self.out_edges:
+                edge.draw(screen)
+
+    def scale(self, scaler: Scale):
+        pixel_x, pixel_y = scaler.calculate_pixel()
+        if pixel_x == 0:
+            pixel_x = 0.00001
+        if pixel_y == 0:
+            pixel_y = 0.00001
+        self.new_x = ((self.node.get_x() - scaler.min_x) / pixel_x) + scaler.start_x
+        self.new_y = ((self.node.get_y() - scaler.min_y) / pixel_y) + scaler.start_y
+
+    def get_size(self):
+        return self.radius
 
     def get_radius(self):
         return self.radius
@@ -51,4 +51,4 @@ class NodePainter(ScreenObjectInterface, Scalable):
         self.out_edges = []
         if self.node:
             for dest in list(self.node.outWard.keys()):
-                self.out_edges.append(EdgePainter(self, graph.get_all_v().get(dest).painter, self.node.outWard.get(dest), self.color))
+                self.out_edges.append(EdgePainter(self, graph.get_all_v().get(dest).painter))

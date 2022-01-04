@@ -1,15 +1,11 @@
-import math
-from os import name
-from types import SimpleNamespace
-from client import Client
 import json
-from pygame import gfxdraw
-import pygame
-from pygame import *
-from client_python.GraphAlgo import GraphAlgo
-from client_python.DiGraph import DiGraph
-from client_python.DiGraph import Node
-import graphics
+import math
+
+from OOP_Ex4.client_python.DiGraph import Node
+from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
+from OOP_Ex4.client_python.GraphGUI import GraphGUI
+from client import Client
+
 lamda = 0.001
 
 
@@ -25,24 +21,19 @@ HOST = '127.0.0.1'
 client = Client()
 
 
+class Game:
 
-
-
-class Game():
-    def __init__(self, GraphAlgo=GraphAlgo):
-        self.Graphalgo = GraphAlgo
+    def __init__(self, algo: GraphAlgo):
+        self.graph_algo = algo
         self.agents = self.agent
         self.pokemons = []
         self.unit = []
 
-        
     def run_game(self):
-        pygame.init()
-        screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-        clock = pygame.time.Clock()
-        pygame.font.init()
-        
-
+        gui = GraphGUI(self)
+        gui.start_gui()
+        while client.is_running() == "true":
+            gui.update_gui()
 
     """
     pokemons = json.loads(client.get_pokemons(),
@@ -159,6 +150,7 @@ class pokemon:
 
     def dest_node(self):
         pass
+
 
 if __name__ == 'main':
     client.start_connection(HOST, PORT)

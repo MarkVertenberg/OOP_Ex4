@@ -1,6 +1,6 @@
 from typing import List
 
-from client_python import GraphInterface
+from OOP_Ex4.client_python.GraphInterface import GraphInterface
 
 
 class GraphAlgoInterface:
@@ -27,7 +27,7 @@ class GraphAlgoInterface:
         """
         raise NotImplementedError
 
-    def shortest_path(self, id1: int, id2: int) -> tuple(float, list):
+    def shortest_path(self, id1: int, id2: int) -> tuple[float, list]:
         """
         Returns the shortest path from node id1 to node id2 using Dijkstra's Algorithm
         @param id1: The start node id
@@ -52,14 +52,14 @@ class GraphAlgoInterface:
         """
         raise NotImplementedError
 
-    def TSP(self, node_lst: List[int]) -> tuple(List[int], float):
+    def TSP(self, node_lst: List[int]) -> tuple[List[int], float]:
         """
         Finds the shortest path that visits all the nodes in the list
         :param node_lst: A list of nodes id's
         :return: A list of the nodes id's in the path, and the overall distance
         """
 
-    def centerPoint(self) -> tuple(int, float):
+    def centerPoint(self) -> tuple[int, float]:
         """
         Finds the node that has the shortest distance to it's farthest node.
         :return: The nodes id, min-maximum distance

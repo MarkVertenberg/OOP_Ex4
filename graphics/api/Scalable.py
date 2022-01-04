@@ -1,12 +1,14 @@
+from OOP_Ex4.graphics import Scale
+
 
 class Scalable:
     """
         Interface that representing scalable object
     """
 
-    def scale(self, x: float, y: float) -> tuple(float, float):
+    def scale(self, scaler: Scale) -> tuple[float, float]:
         """
-            Scales the object according to width and height.
+            Scales the object according to the scaler.
         """
         raise NotImplementedError
 

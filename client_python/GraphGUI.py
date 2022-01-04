@@ -1,64 +1,72 @@
-from typing import List
-
 import pygame
 
-from OOP_Ex4.client_python.game import game
+from OOP_Ex4.client_python.game import Game
 from OOP_Ex4.graphics import *
-from GraphInterface import GraphInterface
+from OOP_Ex4.graphics.Colors import *
+from OOP_Ex4.graphics.api import Scalable
 
-WIDTH = 1280
+WIDTH = 1080
 HEIGHT = 720
-GRAPH_WIDTH = 960
-GRAPH_HEIGHT = 720
+GRAPH_WIDTH = 1080
+GRAPH_HEIGHT = 620
 REFRESH_RATE = 60
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-SKY_BLUE = (75, 118, 229)
-LIGHT_YELLOW = (255, 253, 126)
 
 
 class GraphGUI:
 
-    WIDTH = WIDTH
-    HEIGHT = HEIGHT
-    GRAPH_WIDTH = GRAPH_WIDTH
-
-    def __init__(self, game_obj: game = None):
-        self.graph_algo = game_obj.graph_algo
-        self.nodes = None
+    def __init__(self, game: Game = None):
+        self.graph_algo = game.graph_algo
+        self.screen_obj = self.init_screen_objects()
+        self.scalable_obj = self.init_scalable_objects()
         self.screen = None
-        self.running = True
+        self.running = False
         self.clock = pygame.time.Clock()
 
-    def run_gui(self, width=GRAPH_WIDTH, height=HEIGHT):
+    def start_gui(self, width=GRAPH_WIDTH, height=HEIGHT):
         pygame.init()
         pygame.display.set_caption("Graph GUI")
         icon = pygame.image.load('../graphics/images/pokemon_icon.png')
         pygame.display.set_icon(icon)
         self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-        while self.running:
+        self.running = True
+
+    def update_gui(self):
+        if self.running:
             self.screen.fill(WHITE)
             if self.graph_algo:
-                nodes = list(self.graph_algo.get_graph().get_all_v().values())
-                self.show_graph(self.screen.get_size()[0], self.screen.get_size()[1], self.graph_algo.get_graph())
+                self.draw_screen(self.screen.get_size()[0], self.screen.get_size()[1])
                 pygame.display.update()
                 for event in pygame.event.get():
-                    for node in nodes:
-                        node.painter.handle_event(event)
+                    for obj in self.screen_obj:
+                        obj.handle_event(event)
                     if event.type == pygame.QUIT:
                         self.running = False
             self.clock.tick(REFRESH_RATE)
-        pygame.quit()
 
-    def show_graph(self, width, height, graph: GraphInterface, outline=5):
+    def draw_screen(self, width, height, outline=5):
+        scaler = Scale(0, 50, width, height - 50, self.graph_algo.get_graph(), self.find_border())
         pygame.draw.rect(self.screen, BLACK, (0, 0, width, height), outline)
-        if graph:
-            nodes = graph.get_all_v().values()
-            for node in nodes:
-                node.painter.draw(self.screen, )
+        for obj in self.screen_obj:
+            if obj is Scalable:
+                obj.scale(scaler)
+            obj.draw(self.screen)
 
-    def show_buttons(self, buttons: List[Button]):
-        for button in buttons:
-            button.draw(self.screen, 2)
+    def init_screen_objects(self):
+        obj = []
+        for node in list(self.graph_algo.get_graph().get_all_v()):
+            node.painter = NodePainter(node)
+            obj.append(node.painter)
+        return obj
+
+    def init_scalable_objects(self):
+        obj = []
+        for node in list(self.graph_algo.get_graph().get_all_v()):
+            node.painter = NodePainter(node)
+            obj.append(node.painter)
+        return obj
+
+    def find_border(self):
+        border = 0
+        for s in self.scalable_obj:
+            if s.get_size() > border:
+                border = s.get_size()

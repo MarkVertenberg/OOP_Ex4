@@ -6,6 +6,7 @@ from NodePainter import NodePainter
 from Colors import *
 from api.ScreenObjectInterface import ScreenObjectInterface
 
+
 class EdgePainter(ScreenObjectInterface):
 
     def __init__(self, src: NodePainter, dest: NodePainter, color=BLACK):
@@ -34,6 +35,9 @@ class EdgePainter(ScreenObjectInterface):
             else:
                 return self.src.new_x - s_w, self.src.new_y - s_h, self.dest.new_x + d_w, self.dest.new_y + d_h
         return None, None, None, None
+
+    def handle_event(self, event):
+        pass
 
     def draw(self, screen, outline=2):
         self.start_x, self.start_y, self.stop_x, self.stop_y = self.start_pos()
