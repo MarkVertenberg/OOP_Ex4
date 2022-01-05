@@ -19,6 +19,3 @@ class Scalable:
         """
         raise NotImplementedError
 
-    def __gt__(self, other) -> bool:
-        """ Comparing between two scalable objects. """
-        return self.get_size() > other.get_size()

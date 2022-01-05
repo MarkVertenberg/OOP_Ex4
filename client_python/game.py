@@ -1,11 +1,11 @@
 import math
 
+from OOP_Ex4.client_python.Agent import Agent
 from OOP_Ex4.client_python.DiGraph import Node
 from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
-from OOP_Ex4.client_python.GraphGUI import GraphGUI
+from OOP_Ex4.client_python.Pokemon import Pokemon
 from OOP_Ex4.client_python.client import Client
-
-from client import Client
+from OOP_Ex4.client_python.GraphGUI import GraphGUI
 import json
 import pygame
 from OOP_Ex4.client_python.Dijkstra import Dijkstra
@@ -24,53 +24,11 @@ HOST = '127.0.0.1'
 client = Client()
 
 
-class Agent:
-    def __init__(self, info: dict):
-        self.id = int(info['id'])
-        self.value = float(info['value'])
-        self.src = int(info['src'])
-        self.dest = int(info['dest'])
-        self.speed = float(info['speed'])
-        pos = str(info['pos'])
-        loc = pos.split(',')
-        self.location = (loc[0], loc[1])
-        self.pokemon = None
-
-    def id(self):
-        return self.id
-
-
-class Pokemon:
-    def __init__(self, info: dict):
-        self.value = float(info['value'])
-        self.type = int(info['type'])
-        pos = str(info['pos'])
-        loc = pos.split(',')
-        self.location = (loc[0], loc[1])
-        self.x = loc[0]
-        self.y = loc[1]
-        self.src = self.src_node()
-        self.dest = self.dest_node()
-        self.agent = None
-
-    def dist_pok_from_ver(self, ver: Node):
-        x_v = pow(float(self.location[0]) - ver.x, 2)
-        y_v = pow(float(self.location[1]) - ver.y, 2)
-        dist = math.sqrt(x_v + y_v)
-        return dist
-
-    def src_node(self):
-        return self.src
-
-    def dest_node(self):
-        return self.dest
-
-
 class Game:
     def __init__(self, algo):
         self.graph_algo = algo
-        self.agents = self.agent
-        self.pokemons = {}
+        self.agents = []
+        self.pokemons = []
         self.unit = []
         self.agents = {}
 
@@ -80,9 +38,12 @@ class Game:
         client.add_agent("{\"id\":2}")
         client.add_agent("{\"id\":3}")
         client.start()
+        print("pass")
         gui = GraphGUI(self)
         gui.start_gui()
         while client.is_running() == "true":
+            self.pokemon(client.get_pokemons())
+            self.agent(client.get_agents())
             gui.update_gui()
             client.move()
         exit(0)
@@ -129,7 +90,7 @@ class Game:
         speed = agent.speed
         return dist / speed
 
-    def find_best_agent(self, pok: pokemon):
+    def find_best_agent(self, pok: Pokemon):
         min = float('inf')
         a = None
         list = self.list_of_agents()
@@ -143,7 +104,7 @@ class Game:
     def find_best_pokemon(self, a: Agent):
         max = 0
         pok = None
-        for p in self.pokemons.values():
+        for p in self.pokemons:
             if p.value > max:
                 max = p.value
                 pok = p

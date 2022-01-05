@@ -2,7 +2,6 @@ import pygame
 
 from OOP_Ex4.graphics import *
 
-
 WIDTH = 1080
 HEIGHT = 720
 GRAPH_WIDTH = 1080
@@ -13,6 +12,7 @@ REFRESH_RATE = 60
 class GraphGUI:
 
     def __init__(self, game):
+        self.game = game
         self.graph_algo = game.graph_algo
         self.screen_obj = []
         self.scalable_obj = []
@@ -22,7 +22,7 @@ class GraphGUI:
 
     def start_gui(self, width=GRAPH_WIDTH, height=HEIGHT):
         pygame.init()
-        pygame.display.set_caption("Graph GUI")
+        pygame.display.set_caption("Pokemon Game")
         icon = pygame.image.load('../graphics/images/pokemon_icon.png')
         pygame.display.set_icon(icon)
         self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -63,6 +63,8 @@ class GraphGUI:
             edge_data = self.graph_algo.get_graph().all_out_edges_of_node(node.value)
             for edge in list(edge_data.keys()):
                 self.screen_obj.append(EdgePainter(node.painter, self.graph_algo.get_graph().vertices[edge].painter))
+        for pokemon in self.game.pokemons:
+            self.screen_obj.append(PokemonPainter(pokemon))
 
     def init_scalable_objects(self):
         self.scalable_obj = []
