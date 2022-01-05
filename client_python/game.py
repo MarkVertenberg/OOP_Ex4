@@ -201,7 +201,7 @@ class Game:
     def main_algorithm(self):
         for agent in self.agents:
             if agent.dest == -1:
-                # self.is_collected(agent)
+                self.is_collected(agent)
                 self.allocate(agent)
                 if agent.target:
                     if agent.src == agent.target.src:
