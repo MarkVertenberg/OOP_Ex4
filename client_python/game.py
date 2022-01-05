@@ -20,12 +20,11 @@ PORT = 6666
 # server host (default localhost 127.0.0.1)
 HOST = '127.0.0.1'
 
-client = Client()
-
 
 class Game:
 
-    def __init__(self, algo):
+    def __init__(self, algo=None):
+        self.client = Client()
         self.graph_algo = algo
         self.agents = []
         self.pokemons = []
@@ -33,19 +32,23 @@ class Game:
         self.agents = {}
 
     def run_game(self):
-        client.add_agent("{\"id\":0}")
-        client.add_agent("{\"id\":1}")
-        client.add_agent("{\"id\":2}")
-        client.add_agent("{\"id\":3}")
-        client.start()
-        print("pass")
+        self.client.start_connection(HOST, PORT)
+        self.client.add_agent("{\"id\":0}")
+        self.client.add_agent("{\"id\":1}")
+        self.client.add_agent("{\"id\":2}")
+        self.client.add_agent("{\"id\":3}")
+        file_location = '../data/graph_file_json'
+        with open(file_location, 'w') as f:
+            f.write(self.client.get_graph())
+        self.graph_algo = GraphAlgo().load_from_json(file_location)
+        self.client.start()
         gui = GraphGUI(self)
         gui.start_gui()
-        while client.is_running() == "true":
-            self.pokemon(client.get_pokemons())
-            self.agent(client.get_agents())
+        while self.client.is_running() == "true":
+            self.pokemon(self.client.get_pokemons())
+            self.agent(self.client.get_agents())
             gui.update_gui()
-            client.move()
+            self.client.move()
         exit(0)
 
     def pokemon(self, pokemon_list):
@@ -123,20 +126,17 @@ class Game:
         for agent in self.agents.values():
             if agent.dest == -1:
                 next_node = None
-                client.choose_next_edge(
+                self.client.choose_next_edge(
                     '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
-                ttl = client.time_to_end()
-                print(ttl, client.get_info())
+                ttl = self.client.time_to_end()
+                print(ttl, self.client.get_info())
 
-        client.move()
+        self.client.move()
+
+    def get_score(self):
+        return float(self.client.get_info()['GameServer']['grade'])
 
 
-client.start_connection(HOST, PORT)
-graph_algo = GraphAlgo()
-file_location = '../data/graph_file_json'
-with open(file_location, 'w') as f:
-    f.write(client.get_graph())
-print(graph_algo.load_from_json(file_location))
-game = Game(graph_algo)
+game = Game()
 game.run_game()
     

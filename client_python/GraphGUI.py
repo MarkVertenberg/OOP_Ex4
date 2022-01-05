@@ -84,3 +84,9 @@ class GraphGUI:
             if s.get_size() > border:
                 border = s.get_size()
         return border
+
+    def create_objects(self):
+        width, height = self.screen.get_size()[0], self.screen.get_size()[1]
+        stop_button = Button(WHITE, width - 90, 10, 80, 30, 'STOP', text_size=36)
+        score = Text(40, 25, 'Score: ' + game.get)
+
