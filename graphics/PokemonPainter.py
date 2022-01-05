@@ -9,7 +9,7 @@ from OOP_Ex4.graphics.Colors import *
 
 class PokemonPainter(ScreenObjectInterface, Scalable):
 
-    def __init__(self, pokemon: Pokemon, radius=10, color=LIGHT_RED):
+    def __init__(self, pokemon: Pokemon, radius=12, color=LIGHT_RED):
         self.pokemon = pokemon
         self.radius = radius
         self.color = color

@@ -18,7 +18,7 @@ class Button(ScreenObjectInterface):
         self.text = Text(x + (width / 2), y + (height / 2), text, text_size, text_color)
         self.is_clicked = False
 
-    def handle_event(self, event, over_color=SKY_BLUE, not_over_color=WHITE, over_color_text=WHITE, not_over_color_text=BLACK):
+    def handle_event(self, event):
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_over(pos):
@@ -26,11 +26,9 @@ class Button(ScreenObjectInterface):
                 self.is_clicked = True
         if event.type == pygame.MOUSEMOTION:
             if self.is_over(pos):
-                self.text.color = over_color_text
-                self.color = over_color
+                self.text.color = LIGHT_RED
             else:
-                self.text.color = not_over_color_text
-                self.color = not_over_color
+                self.text.color = BLACK
 
     def draw(self, screen, outline=None):
         if outline:
@@ -42,7 +40,7 @@ class Button(ScreenObjectInterface):
         if self.text != '':
             self.text.x = self.x + (self.width / 2)
             self.text.y = self.y + (self.height / 2)
-            self.text.draw(screen, )
+            self.text.draw(screen)
 
     def is_over(self, pos):
         if self.x < pos[0] < self.x + self.width:

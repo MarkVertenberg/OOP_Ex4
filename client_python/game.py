@@ -23,9 +23,9 @@ HOST = '127.0.0.1'
 
 class Game:
 
-    def __init__(self, algo=None):
+    def __init__(self):
         self.client = Client()
-        self.graph_algo = algo
+        self.graph_algo = GraphAlgo()
         self.agents = []
         self.pokemons = []
         self.unit = []
@@ -40,7 +40,7 @@ class Game:
         file_location = '../data/graph_file_json'
         with open(file_location, 'w') as f:
             f.write(self.client.get_graph())
-        self.graph_algo = GraphAlgo().load_from_json(file_location)
+        self.graph_algo.load_from_json(file_location)
         self.client.start()
         gui = GraphGUI(self)
         gui.start_gui()
@@ -64,8 +64,8 @@ class Game:
             self.agents.append(Agent(e['Agent']))
 
     def find_src_dest_of_pok(self, pok: pokemon):
-        for ver1 in self.graph_algo.get_graph():
-            for ver2 in self.graph_algo.get_graph():
+        for ver1 in list(self.graph_algo.get_graph().get_all_v().values()):
+            for ver2 in list((self.graph_algo.get_graph().get_all_v().values())):
              loc1 = self.dist_of_2_ver(ver1, ver2)
              loc2 = pok.dist_pok_from_ver(ver1)
              loc3 = pok.dist_pok_from_ver(ver2)
@@ -134,9 +134,14 @@ class Game:
         self.client.move()
 
     def get_score(self):
-        return float(self.client.get_info()['GameServer']['grade'])
+        json_score = json.loads(self.client.get_info())
+        return json_score['GameServer']['grade']
+
+    def time_remaining(self):
+        return self.client.time_to_end()
 
 
 game = Game()
 game.run_game()
+
     

@@ -56,6 +56,8 @@ class GraphGUI:
     def init_screen_objects(self):
         nodes = list(self.graph_algo.get_graph().get_all_v().values())
         self.screen_obj = []
+        for obj in self.create_objects():
+            self.screen_obj.append(obj)
         for node in nodes:
             node.painter = NodePainter(node)
             self.screen_obj.append(node.painter)
@@ -87,6 +89,7 @@ class GraphGUI:
 
     def create_objects(self):
         width, height = self.screen.get_size()[0], self.screen.get_size()[1]
-        stop_button = Button(WHITE, width - 90, 10, 80, 30, 'STOP', text_size=36)
-        score = Text(40, 25, 'Score: ' + game.get)
-
+        stop_button = Button(WHITE, width - 120, 10, 80, 30, 'STOP', text_size=36)
+        score = Text(80, 25, 'Score: ' + str(self.game.get_score()))
+        time = Text(width / 2, 25, f'Time to End: {self.game.time_remaining()}ms')
+        return [stop_button, score, time]

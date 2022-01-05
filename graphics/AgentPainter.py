@@ -9,7 +9,7 @@ from OOP_Ex4.graphics.Colors import *
 
 class AgentPainter(ScreenObjectInterface, Scalable):
 
-    def __init__(self, agent: Agent, radius=10, color=LIGHT_BLUE):
+    def __init__(self, agent: Agent, radius=12, color=LIGHT_BLUE):
         self.agent = agent
         self.radius = radius
         self.color = color
