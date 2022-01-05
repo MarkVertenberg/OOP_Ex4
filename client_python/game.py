@@ -93,35 +93,104 @@ class Game:
         speed = agent.speed
         return dist / speed
 
-    def find_best_agent(self, pok: Pokemon):
-        min = float('inf')
-        a = None
-        list = self.list_of_agents()
-        for agent in list:
-            val = self.time_from_agent_to_pok(agent, pok)
-            if val < min:
-                min = val
-                a = agent
-        pok.agent = a
+        # biggest value in first place in array
 
-    def find_best_pokemon(self, a: Agent):
-        max = 0
-        pok = None
+    def sort_pokemon(self):
+        list = []
         for p in self.pokemons:
-            if p.value > max:
-                max = p.value
-                pok = p
+            list.append(p)
+        for p in list:
+            for j in range(0, len(self.pokemons) - p - 1):
+                value1 = list[j].value
+                value2 = list[j + 1].value
+                if value1 > value2:
+                    list[j], list[j + 1] = list[j + 1], list[j]
+        return list
 
-        a.pokemon = pok
+    def sort_dist_from_pok(self, agent: Agent):
+        list = []
+        for p in self.sort_pokemon():
+            list.append(p)
+
+        for p in list:
+            for j in range(0, len(self.sort_pokemon()) - p - 1):
+                time1 = self.time_from_agent_to_pok(agent, list[j])
+                time2 = self.time_from_agent_to_pok(agent, list[j + 1])
+                if time1 < time2:
+                    list[j], list[j + 1] = list[j + 1], list[j]
+
+        return list
+
+        # returns list with points for pokimons, when the index is bigger so is the points
+
+    def points_for_best(self, agent: Agent):
+        point_list = []
+        for dis in self.sort_dist_from_pok(agent):
+            for pok in self.sort_pokemon():
+                if dis == pok:
+                    points = self.sort_dist_from_pok(agent).index(dis) + self.sort_pokemon().index(pok)
+                    point_list[points] = pok
+
+        return point_list
 
     def allocate(self):
-       for p in self.pokemons:
-           if p.agent is None:
-               self.find_best_agent(p)
-       for a in self.agents:
-           if a.pokemon is None:
-               self.find_best_pokemon(a)
+        best_pok = None
+        visited = [False] * len(self.agents)
+        for a in self.agents:
+            if visited[a] is not False:
+                length = len(self.points_for_best(a))
+                best_pok = self.points_for_best(a)[length - 1]
+                a.best_pok
+                visited[a] = False
 
+    """ def find_best_agent(self, pok: Pokemon):
+           min = float('inf')
+           a = None
+           list = self.list_of_agents()
+           for agent in list:
+               val = self.time_from_agent_to_pok(agent, pok)
+               if val < min:
+                   min = val
+                   a = agent
+           pok.agent = a
+
+       def find_best_pokemon(self, a: Agent):
+           max = 0
+           pok = None
+           for p in self.pokemons:
+               if p.value > max:
+                   max = p.value
+                   pok = p
+
+           a.pokemon = pok
+
+       def allocate(self):
+          for p in self.pokemons:
+              if p.agent is None:
+                  self.find_best_agent(p)
+          for a in self.agents:
+              if a.pokemon is None:
+                  self.find_best_pokemon(a)
+       """
+
+    """def allo(self):
+        visited = [False] * len(self.agents)
+        min = float('inf')
+        a = None
+        pok = None
+        for agent in self.agents:
+           if visited[agent]:
+            for p in self.sort_pokemon():
+             time = self.time_from_agent_to_pok(agent, p)
+             if time < min:
+                 min = time
+                 a = agent
+                 pok = p
+                 visited[agent] = False
+
+        pok.a
+        a.pok
+        """
     def main_algorithm(self):
         for agent in self.agents.values():
             if agent.dest == -1:
