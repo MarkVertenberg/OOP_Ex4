@@ -1,7 +1,7 @@
 import pygame
 
-from Colors import *
-from api.ScreenObjectInterface import ScreenObjectInterface
+from OOP_Ex4.graphics.Colors import *
+from OOP_Ex4.graphics.api.ScreenObjectInterface import ScreenObjectInterface
 
 
 class Text(ScreenObjectInterface):

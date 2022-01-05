@@ -1,12 +1,14 @@
 import math
+
+from OOP_Ex4.client_python.DiGraph import Node
+from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
+from OOP_Ex4.client_python.GraphGUI import GraphGUI
+from OOP_Ex4.client_python.client import Client
+
 from client import Client
 import json
 import pygame
-from pygame import *
-from client_python.GraphAlgo import GraphAlgo
-from client_python.DiGraph import Node
-from client_python.game import Agents
-from client_python.Dijkstra import Dijkstra
+from OOP_Ex4.client_python.Dijkstra import Dijkstra
 lamda = 0.001
 
 DIJKSTRA = Dijkstra()
@@ -21,36 +23,85 @@ HOST = '127.0.0.1'
 
 client = Client()
 
-class Game():
-    def __init__(self, GraphAlgo=GraphAlgo):
-        self.Graphalgo = GraphAlgo
+
+class Agent:
+    def __init__(self, info: dict):
+        self.id = int(info['id'])
+        self.value = float(info['value'])
+        self.src = int(info['src'])
+        self.dest = int(info['dest'])
+        self.speed = float(info['speed'])
+        pos = str(info['pos'])
+        loc = pos.split(',')
+        self.location = (loc[0], loc[1])
+        self.pokemon = None
+
+    def id(self):
+        return self.id
+
+
+class Pokemon:
+    def __init__(self, info: dict):
+        self.value = float(info['value'])
+        self.type = int(info['type'])
+        pos = str(info['pos'])
+        loc = pos.split(',')
+        self.location = (loc[0], loc[1])
+        self.x = loc[0]
+        self.y = loc[1]
+        self.src = self.src_node()
+        self.dest = self.dest_node()
+        self.agent = None
+
+    def dist_pok_from_ver(self, ver: Node):
+        x_v = pow(float(self.location[0]) - ver.x, 2)
+        y_v = pow(float(self.location[1]) - ver.y, 2)
+        dist = math.sqrt(x_v + y_v)
+        return dist
+
+    def src_node(self):
+        return self.src
+
+    def dest_node(self):
+        return self.dest
+
+
+class Game:
+    def __init__(self, algo):
+        self.graph_algo = algo
         self.agents = self.agent
         self.pokemons = {}
         self.unit = []
         self.agents = {}
 
-
     def run_game(self):
-        pygame.init()
-        screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-        clock = pygame.time.Clock()
-        pygame.font.init()
+        client.add_agent("{\"id\":0}")
+        client.add_agent("{\"id\":1}")
+        client.add_agent("{\"id\":2}")
+        client.add_agent("{\"id\":3}")
+        client.start()
+        gui = GraphGUI(self)
+        gui.start_gui()
+        while client.is_running() == "true":
+            gui.update_gui()
+            client.move()
+        exit(0)
 
     def pokemon(self, pokemon_list):
         json_pokemons = json.loads(pokemon_list)
         self.pokemons = []
         for p in json_pokemons['Pokemons']:
-            self.pokemons.append(pokemon(p['Pokemon']))
+            self.pokemons.append(Pokemon(p['Pokemon']))
 
     def agent(self, agent_list):
         json_agent = json.loads(agent_list)
         self.agents = []
         for e in json_agent['Agents']:
-            self.agents.append(Agents(e['Agent']))
+            self.agents.append(Agent(e['Agent']))
 
     def find_src_dest_of_pok(self, pok: pokemon):
-        for ver1 in self.Graphalgo.get_graph():
-            for ver2 in self.Graphalgo.get_graph():
+        for ver1 in self.graph_algo.get_graph():
+            for ver2 in self.graph_algo.get_graph():
              loc1 = self.dist_of_2_ver(ver1, ver2)
              loc2 = pok.dist_pok_from_ver(ver1)
              loc3 = pok.dist_pok_from_ver(ver2)
@@ -73,8 +124,8 @@ class Game():
 
         # the time for agent to get to to pokemon
 
-    def time_from_agent_to_pok(self, agent: Agents, pok: pokemon):
-        dist = DIJKSTRA.shortest_path(self.Graphalgo.get_graph(), agent.src, pok.src)[0]
+    def time_from_agent_to_pok(self, agent: Agent, pok: Pokemon):
+        dist = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, pok.src)[0]
         speed = agent.speed
         return dist / speed
 
@@ -89,7 +140,7 @@ class Game():
                 a = agent
         pok.agent = a
 
-    def find_best_pokemon(self, a: Agents):
+    def find_best_pokemon(self, a: Agent):
         max = 0
         pok = None
         for p in self.pokemons.values():
@@ -108,53 +159,12 @@ class Game():
                self.find_best_pokemon(a)
 
 
-
-
-class Agents:
-    def __init__(self, info: dict):
-        self.id = int(info['id'])
-        self.value = float(info['value'])
-        self.src = int(info['src'])
-        self.dest = int(info['dest'])
-        self.speed = float(info['speed'])
-        pos = str(info['pos'])
-        loc = pos.split(',')
-        self.location = (loc[0], loc[1])
-        self.pokemon = None
-
-    def id(self):
-        return self.id    
-
-
-class pokemon:
-    def __init__(self, info: dict):
-        self.value = float(info['value'])
-        self.type = int(info['type'])
-        pos = str(info['pos'])
-        loc = pos.split(',')
-        self.location = (loc[0], loc[1])
-        self.x = loc[0]
-        self.y = loc[1]
-        self.src = self.src_node()
-        self.dest = self.dest_node()
-        self.agent = None
-
-    def dist_pok_from_ver(self, ver: Node):
-        x_v = pow((self.location[0] - ver.x), 2)
-        y_v = pow(self.location[1] - ver.y, 2)
-        dist = math.sqrt(x_v + y_v)
-        return dist
-
-    def src_node(self):
-        return self.src
-
-    def dest_node(self):
-        return self.dest
-
-if __name__ == 'main':
-    client.start_connection(HOST, PORT)
-    graph_algo = GraphAlgo()
-    graph_algo.load_from_json(client.get_graph())
-    game = Game(graph_algo)
-    game.run_game()
+client.start_connection(HOST, PORT)
+graph_algo = GraphAlgo()
+file_location = '../data/graph_file_json'
+with open(file_location, 'w') as f:
+    f.write(client.get_graph())
+print(graph_algo.load_from_json(file_location))
+game = Game(graph_algo)
+game.run_game()
     

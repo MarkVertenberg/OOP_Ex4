@@ -1,9 +1,7 @@
 import pygame
 
-from OOP_Ex4.client_python.game import Game
 from OOP_Ex4.graphics import *
-from OOP_Ex4.graphics.Colors import *
-from OOP_Ex4.graphics.api import Scalable
+
 
 WIDTH = 1080
 HEIGHT = 720
@@ -14,10 +12,10 @@ REFRESH_RATE = 60
 
 class GraphGUI:
 
-    def __init__(self, game: Game = None):
+    def __init__(self, game):
         self.graph_algo = game.graph_algo
-        self.screen_obj = self.init_screen_objects()
-        self.scalable_obj = self.init_scalable_objects()
+        self.screen_obj = []
+        self.scalable_obj = []
         self.screen = None
         self.running = False
         self.clock = pygame.time.Clock()
@@ -42,31 +40,39 @@ class GraphGUI:
                     if event.type == pygame.QUIT:
                         self.running = False
             self.clock.tick(REFRESH_RATE)
+        else:
+            pygame.quit()
 
     def draw_screen(self, width, height, outline=5):
-        scaler = Scale(0, 50, width, height - 50, self.graph_algo.get_graph(), self.find_border())
-        pygame.draw.rect(self.screen, BLACK, (0, 0, width, height), outline)
+        self.init_screen_objects()
+        self.init_scalable_objects()
+        scaler = Scale(0, 50, width, height, self.graph_algo.get_graph(), self.find_border() + outline)
+        pygame.draw.rect(self.screen, BLACK, (0, 50, width, height - 50), outline)
         for obj in self.screen_obj:
-            if obj is Scalable:
+            if type(obj).__bases__.__contains__(Scalable):
                 obj.scale(scaler)
             obj.draw(self.screen)
 
     def init_screen_objects(self):
-        obj = []
-        for node in list(self.graph_algo.get_graph().get_all_v()):
+        nodes = list(self.graph_algo.get_graph().get_all_v().values())
+        self.screen_obj = []
+        for node in nodes:
             node.painter = NodePainter(node)
-            obj.append(node.painter)
-        return obj
+            self.screen_obj.append(node.painter)
+        for node in nodes:
+            edge_data = self.graph_algo.get_graph().all_out_edges_of_node(node.value)
+            for edge in list(edge_data.keys()):
+                self.screen_obj.append(EdgePainter(node.painter, self.graph_algo.get_graph().vertices[edge].painter))
 
     def init_scalable_objects(self):
-        obj = []
-        for node in list(self.graph_algo.get_graph().get_all_v()):
+        self.scalable_obj = []
+        for node in list(self.graph_algo.get_graph().get_all_v().values()):
             node.painter = NodePainter(node)
-            obj.append(node.painter)
-        return obj
+            self.scalable_obj.append(node.painter)
 
     def find_border(self):
         border = 0
         for s in self.scalable_obj:
             if s.get_size() > border:
                 border = s.get_size()
+        return border

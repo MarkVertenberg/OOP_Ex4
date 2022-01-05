@@ -2,9 +2,9 @@ import math
 
 import pygame.draw
 
-from NodePainter import NodePainter
-from Colors import *
-from api.ScreenObjectInterface import ScreenObjectInterface
+from OOP_Ex4.graphics.NodePainter import NodePainter
+from OOP_Ex4.graphics.Colors import *
+from OOP_Ex4.graphics.api.ScreenObjectInterface import ScreenObjectInterface
 
 
 class EdgePainter(ScreenObjectInterface):

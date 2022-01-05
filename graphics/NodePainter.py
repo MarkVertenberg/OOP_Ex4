@@ -1,17 +1,16 @@
 import pygame
 
 from OOP_Ex4.graphics import Scale
-from Text import Text
-from Colors import *
+from OOP_Ex4.graphics.Text import Text
+from OOP_Ex4.graphics.Colors import *
 from OOP_Ex4.client_python.DiGraph import Node
-from api import *
+from OOP_Ex4.graphics.api import *
 
 
 class NodePainter(ScreenObjectInterface, Scalable):
 
     def __init__(self, node: Node, radius=15, outline=2, color=LIGHT_YELLOW):
         self.node = node
-        self.out_edges = []
         self.radius = radius
         self.outline = outline
         self.color = color
@@ -27,9 +26,8 @@ class NodePainter(ScreenObjectInterface, Scalable):
             self.text.x = self.new_x
             self.text.y = self.new_y
             pygame.draw.circle(screen, BLACK, (self.new_x, self.new_y), self.radius + outline)
-
-            for edge in self.out_edges:
-                edge.draw(screen)
+            pygame.draw.circle(screen, self.color, (self.new_x, self.new_y), self.radius)
+            self.text.draw(screen)
 
     def scale(self, scaler: Scale):
         pixel_x, pixel_y = scaler.calculate_pixel()
@@ -46,9 +44,3 @@ class NodePainter(ScreenObjectInterface, Scalable):
     def get_radius(self):
         return self.radius
 
-    def update_edges(self, graph):
-        from EdgePainter import EdgePainter
-        self.out_edges = []
-        if self.node:
-            for dest in list(self.node.outWard.keys()):
-                self.out_edges.append(EdgePainter(self, graph.get_all_v().get(dest).painter))

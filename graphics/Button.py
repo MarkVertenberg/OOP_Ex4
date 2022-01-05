@@ -1,7 +1,7 @@
 import pygame
-from Text import Text
-from Colors import *
-from api.ScreenObjectInterface import ScreenObjectInterface
+from OOP_Ex4.graphics.Text import Text
+from OOP_Ex4.graphics.Colors import *
+from OOP_Ex4.graphics.api.ScreenObjectInterface import ScreenObjectInterface
 
 
 class Button(ScreenObjectInterface):
