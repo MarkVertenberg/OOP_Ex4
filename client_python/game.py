@@ -7,7 +7,6 @@ from OOP_Ex4.client_python.Pokemon import Pokemon
 from OOP_Ex4.client_python.client import Client
 from OOP_Ex4.client_python.GraphGUI import GraphGUI
 import json
-import pygame
 from OOP_Ex4.client_python.Dijkstra import Dijkstra
 lamda = 0.001
 
@@ -25,6 +24,7 @@ client = Client()
 
 
 class Game:
+
     def __init__(self, algo):
         self.graph_algo = algo
         self.agents = []
@@ -119,10 +119,10 @@ class Game:
            if a.pokemon is None:
                self.find_best_pokemon(a)
 
-    def client(self, client: client):
+    def main_algorithm(self):
         for agent in self.agents.values():
             if agent.dest == -1:
-                next_node = (agent.src - 1) % len(GraphAlgo.get_graph().Nodes)
+                next_node = None
                 client.choose_next_edge(
                     '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
                 ttl = client.time_to_end()

@@ -7,7 +7,8 @@ class Agent:
         self.speed = float(info['speed'])
         pos = str(info['pos'])
         loc = pos.split(',')
-        self.location = (loc[0], loc[1])
+        self.x = float(loc[0])
+        self.y = float(loc[1])
         self.pokemon = None
 
     def id(self):

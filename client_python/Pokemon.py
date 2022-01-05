@@ -4,6 +4,7 @@ from OOP_Ex4.client_python.DiGraph import Node
 
 
 class Pokemon:
+
     def __init__(self, info: dict):
         self.value = float(info['value'])
         self.type = int(info['type'])
