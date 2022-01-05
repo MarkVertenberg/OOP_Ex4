@@ -1,14 +1,13 @@
 import math
-from types import SimpleNamespace
 
-from client_python.Agent import Agent
-from client_python.DiGraph import Node
-from client_python.GraphAlgo import GraphAlgo
-from client_python.Pokemon import Pokemon
-from client_python.client import Client
-from client_python.GraphGUI import GraphGUI
+from OOP_Ex4.client_python.agent import Agent
+from OOP_Ex4.client_python.DiGraph import Node
+from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
+from OOP_Ex4.client_python.pokemon import Pokemon
+from OOP_Ex4.client_python.client import Client
+from OOP_Ex4.client_python.GraphGUI import GraphGUI
 import json
-from client_python.Dijkstra import Dijkstra
+from OOP_Ex4.client_python.Dijkstra import Dijkstra
 lamda = 0.001
 
 DIJKSTRA = Dijkstra()
@@ -21,15 +20,11 @@ PORT = 6666
 # server host (default localhost 127.0.0.1)
 HOST = '127.0.0.1'
 
-client = Client()
-
-pokemons = client.get_pokemons()
-pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
-
 
 class Game:
 
-    def __init__(self, algo):
+    def __init__(self, algo=None):
+        self.client = Client()
         self.graph_algo = algo
         self.agents = []
         self.pokemons = []
@@ -37,19 +32,23 @@ class Game:
         self.agents = {}
 
     def run_game(self):
-        client.add_agent("{\"id\":0}")
-        client.add_agent("{\"id\":1}")
-        client.add_agent("{\"id\":2}")
-        client.add_agent("{\"id\":3}")
-        client.start()
-        print("pass")
+        self.client.start_connection(HOST, PORT)
+        self.client.add_agent("{\"id\":0}")
+        self.client.add_agent("{\"id\":1}")
+        self.client.add_agent("{\"id\":2}")
+        self.client.add_agent("{\"id\":3}")
+        file_location = '../data/graph_file_json'
+        with open(file_location, 'w') as f:
+            f.write(self.client.get_graph())
+        self.graph_algo = GraphAlgo().load_from_json(file_location)
+        self.client.start()
         gui = GraphGUI(self)
         gui.start_gui()
-        while client.is_running() == "true":
-            self.pokemon(client.get_pokemons())
-            self.agent(client.get_agents())
+        while self.client.is_running() == "true":
+            self.pokemon(self.client.get_pokemons())
+            self.agent(self.client.get_agents())
             gui.update_gui()
-            client.move()
+            self.client.move()
         exit(0)
 
     def pokemon(self, pokemon_list):
@@ -94,7 +93,8 @@ class Game:
         speed = agent.speed
         return dist / speed
 
-     #biggest value in first place in array
+        # biggest value in first place in array
+
     def sort_pokemon(self):
         list = []
         for p in self.pokemons:
@@ -121,24 +121,23 @@ class Game:
 
         return list
 
-    #returns list with points for pokimons, when the index is bigger so is the points
+        # returns list with points for pokimons, when the index is bigger so is the points
+
     def points_for_best(self, agent: Agent):
         point_list = []
         for dis in self.sort_dist_from_pok(agent):
             for pok in self.sort_pokemon():
                 if dis == pok:
-                  points = self.sort_dist_from_pok(agent).index(dis) + self.sort_pokemon().index(pok)
-                  point_list[points] = pok
+                    points = self.sort_dist_from_pok(agent).index(dis) + self.sort_pokemon().index(pok)
+                    point_list[points] = pok
 
         return point_list
 
     def allocate(self, a: Agent):
         length = len(self.points_for_best(a))
-        a.pokemon = self.points_for_best(a)[length-1]
+        a.pokemon = self.points_for_best(a)[length - 1]
 
         return a.pokemon.src
-
-
 
     """ def find_best_agent(self, pok: Pokemon):
            min = float('inf')
@@ -193,18 +192,17 @@ class Game:
             if agent.dest == -1:
                 path = DIJKSTRA.shortest_path(agent.src, self.allocate(agent))[1]
                 next_node = path[1]
-                client.choose_next_edge('{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
-                ttl = client.time_to_end()
-                print(ttl, client.get_info())
+                self.client.choose_next_edge(
+                    '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
+                ttl = self.client.time_to_end()
+                print(ttl, self.client.get_info())
 
-        client.move()
+        self.client.move()
 
-client.start_connection(HOST, PORT)
-graph_algo = GraphAlgo()
-file_location = '../data/graph_file_json'
-with open(file_location, 'w') as f:
-    f.write(client.get_graph())
-print(graph_algo.load_from_json(file_location))
-game = Game(graph_algo)
+    def get_score(self):
+        return float(self.client.get_info()['GameServer']['grade'])
+
+
+game = Game()
 game.run_game()
     
