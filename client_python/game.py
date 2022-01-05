@@ -8,6 +8,7 @@ from OOP_Ex4.client_python.client import Client
 from OOP_Ex4.client_python.GraphGUI import GraphGUI
 import json
 from OOP_Ex4.client_python.Dijkstra import Dijkstra
+
 lamda = 0.001
 
 DIJKSTRA = Dijkstra()
@@ -48,7 +49,7 @@ class Game:
             self.pokemon(self.client.get_pokemons())
             self.agent(self.client.get_agents())
             gui.update_gui()
-            self.main_algorithm()
+            # self.main_algorithm()
         exit(0)
 
     def pokemon(self, pokemon_list):
@@ -66,40 +67,26 @@ class Game:
     def find_src_dest_of_pok(self, pok: pokemon):
         for ver1 in list(self.graph_algo.get_graph().get_all_v().values()):
             for ver2 in list(self.graph_algo.get_graph().get_all_v().values()):
-             loc1 = self.dist_of_2_ver(ver1, ver2)
-             loc2 = pok.dist_pok_from_ver(ver1)
-             loc3 = pok.dist_pok_from_ver(ver2)
-             loc4 = loc2+loc3
-             if abs(loc1-loc4) <= lamda:
-                 if pok.type == -1:
-                    pok.src = max(ver1.value, ver2.value)
-                    pok.dest = min(ver1.value, ver2.value)
-                 else:
-                    pok.src = min(ver1.value, ver2.value)
-                    pok.dest = max(ver1.value, ver2.value)
+                loc1 = ver1.distance(ver2)
+                loc2 = pok.dist_pok_from_ver(ver1)
+                loc3 = pok.dist_pok_from_ver(ver2)
+                loc4 = loc2+loc3
+                if abs(loc1-loc4) <= lamda:
+                    if pok.type == -1:
+                        pok.src = max(ver1.value, ver2.value)
+                        pok.dest = min(ver1.value, ver2.value)
+                    else:
+                        pok.src = min(ver1.value, ver2.value)
+                        pok.dest = max(ver1.value, ver2.value)
+                    return
 
-
-    def dist_of_2_ver(self,ver1: Node, ver2: Node):
-        x_v = pow((ver1.x - ver2.x), 2)
-        y_v = pow(ver1.y - ver2.y, 2)
-        dist = math.sqrt(x_v + y_v)
-        return dist
-
-    def list_of_agents(self):
-        list = []
-        for agent in self.agents.values():
-            list.append(agent.id)
-        return list
-
-        # the time for agent to get to to pokemon
-
+    # the time for agent to get to to pokemon
     def time_from_agent_to_pok(self, agent: Agent, pok: Pokemon):
         dist = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, pok.src)[0]
         speed = agent.speed
         return dist / speed
 
-        # biggest value in first place in array
-
+    # biggest value in first place in array
     def sort_pokemon(self):
         list = []
         for p in self.pokemons:
@@ -109,7 +96,9 @@ class Game:
                 value1 = list[j].value
                 value2 = list[j + 1].value
                 if value1 > value2:
-                    list[j], list[j + 1] = list[j + 1], list[j]
+                    temp = list[j]
+                    list[j] = list[j + 1]
+                    list[j + 1] = temp
         return list
 
     def sort_dist_from_pok(self, agent: Agent):
@@ -122,12 +111,12 @@ class Game:
                 time1 = self.time_from_agent_to_pok(agent, list[j])
                 time2 = self.time_from_agent_to_pok(agent, list[j + 1])
                 if time1 < time2:
-                    list[j], list[j + 1] = list[j + 1], list[j]
-
+                    temp = list[j]
+                    list[j] = list[j + 1]
+                    list[j + 1] = temp
         return list
 
-        # returns list with points for pokimons, when the index is bigger so is the points
-
+    # returns list with points for pokimons, when the index is bigger so is the points
     def points_for_best(self, agent: Agent):
         point_list = {}
         for dis in self.sort_dist_from_pok(agent):
@@ -143,9 +132,7 @@ class Game:
         return l2
 
     def allocate(self, a: Agent):
-        length = len(self.points_for_best(a))
-        a.pokemon = self.points_for_best(a)[length - 1]
-
+        a.pokemon = self.points_for_best(a)[-1]
         return a.pokemon.src
 
     """ def find_best_agent(self, pok: Pokemon):
