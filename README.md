@@ -17,14 +17,14 @@ In this project we had to realize the "Pokemon game".
 - # Motivation:
 This project is a concluding assignment of the Object Oriented Programming (OOP) course. This is an opportunity to practically experience the material being studied, to design the general algorithm then to implement the version of a working algorithm, Work as a group on "Github" , to do tests (unitest), and of course do a graphical user interface (GUI) and experiment with "Pygame".
 
- * Algorithm goals: 
+ * **Algorithm goals:** 
  
     - The algorithm should be as efficient as possible.
     - At each stage we need to consider the number of agents and the number of Pokemon to make a pre-planning of the moves we want to make.
     - It is important to consider not only the shortest distance of the agents from these Pokemon but also the "weight" of the Pokemon, so that in the shortest time we will gain a bigger score and make fewer moves.
 
 
- * GUI goals:  
+ * **GUI goals:** 
  
     - The GUI should be clear.
     - Should be scalable with a resizable window.
@@ -33,29 +33,38 @@ This project is a concluding assignment of the Object Oriented Programming (OOP)
     - Should show the time to end in seconds.
     - Should have a “stop” button to gracefully stop the game at any time point.
 
+
 # Algorithm:
 
+
 # UML:
+
 
 # Report results:
 **The results can be seen in the attached WIKI file.**  
 Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki/Report-results
 
+
+# How to play?
+**Guidance and explanation can be found on the attached WIKI file.**    
+Link: https://github.com/MarkVertenberg/OOP_Ex4/wiki/How-to-play%3F
+
+
 # Helpful Links:
 
 - OXFORD COLLEGE | Directed and Edge-Weighted Graphs: 
-In this site you can find information about Directed and Edge-Weighted Graphs , and the best data structure for it.
-    link:http://math.oxford.emory.edu/site/cs171/directedAndEdgeWeightedGraphs/
+In this site you can find information about Directed and Edge-Weighted Graphs , and the best data structure for it.   
+    Link: http://math.oxford.emory.edu/site/cs171/directedAndEdgeWeightedGraphs/
 
-- Explanation of Dijkstra’s algorithm for finding the shortest path between one vertex in a graph and another.
-This video helped us to implement our Dijkstra class.
-    link:https://www.youtube.com/watch?v=pVfj6mxhdMw
+- Explanation of Dijkstra’s algorithm for finding the shortest path between one vertex in a graph and another.  
+This video helped us to implement our Dijkstra class.     
+    Link: https://www.youtube.com/watch?v=pVfj6mxhdMw
 
-- Explanation on performing Depth–first search (DFS) to check if A directed graph is strongly connected.
-    link:https://www.techiedelight.com/check-given-graph-strongly-connected-not/
+- Explanation on performing Depth–first search (DFS) to check if A directed graph is strongly connected.   
+    Link: https://www.techiedelight.com/check-given-graph-strongly-connected-not/
     
-- Dijkstra's Shortest Path Algorithm - A Detailed and Visual Introduction
-   https://www.freecodecamp.org/news/dijkstras-shortest-path-algorithm-visual-introduction/
+- Dijkstra's Shortest Path Algorithm - A Detailed and Visual Introduction.   
+  Link: https://www.freecodecamp.org/news/dijkstras-shortest-path-algorithm-visual-introduction/
    
 # Credits:
 1. Mark vertenberg.
