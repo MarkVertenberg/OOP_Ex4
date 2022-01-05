@@ -9,7 +9,7 @@ from client_python.GraphGUI import GraphGUI
 import json
 from client_python.Dijkstra import Dijkstra
 
-lamda = 0.0000000001
+lamda = 0.000000000001
 
 DIJKSTRA = Dijkstra()
 # init pygame
