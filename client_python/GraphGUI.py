@@ -63,8 +63,8 @@ class GraphGUI:
             edge_data = self.graph_algo.get_graph().all_out_edges_of_node(node.value)
             for edge in list(edge_data.keys()):
                 self.screen_obj.append(EdgePainter(node.painter, self.graph_algo.get_graph().vertices[edge].painter))
-        #for pokemon in self.game.pokemons:
-        #    self.screen_obj.append(PokemonPainter(pokemon))
+        for pokemon in self.game.pokemons:
+            self.screen_obj.append(PokemonPainter(pokemon))
         for agent in self.game.agents:
             self.screen_obj.append(AgentPainter(agent))
 
@@ -73,6 +73,10 @@ class GraphGUI:
         for node in list(self.graph_algo.get_graph().get_all_v().values()):
             node.painter = NodePainter(node)
             self.scalable_obj.append(node.painter)
+        for pokemon in self.game.pokemons:
+            self.screen_obj.append(PokemonPainter(pokemon))
+        for agent in self.game.agents:
+            self.screen_obj.append(AgentPainter(agent))
 
     def find_border(self):
         border = 0

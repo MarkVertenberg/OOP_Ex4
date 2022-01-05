@@ -1,9 +1,9 @@
 import math
 
-from OOP_Ex4.client_python.Agent import Agent
+from OOP_Ex4.client_python.agent import Agent
 from OOP_Ex4.client_python.DiGraph import Node
 from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
-from OOP_Ex4.client_python.Pokemon import Pokemon
+from OOP_Ex4.client_python.pokemon import Pokemon
 from OOP_Ex4.client_python.client import Client
 from OOP_Ex4.client_python.GraphGUI import GraphGUI
 import json

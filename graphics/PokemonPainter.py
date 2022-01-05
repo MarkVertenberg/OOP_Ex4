@@ -1,7 +1,8 @@
 import pygame
 
-from OOP_Ex4.client_python.Pokemon import Pokemon
-from OOP_Ex4.graphics import Scale, Text
+from OOP_Ex4.client_python.pokemon import Pokemon
+from OOP_Ex4.graphics.Text import Text
+from OOP_Ex4.graphics.Scale import Scale
 from OOP_Ex4.graphics.api import *
 from OOP_Ex4.graphics.Colors import *
 
