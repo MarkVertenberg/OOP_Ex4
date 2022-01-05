@@ -48,7 +48,7 @@ class Game:
             self.pokemon(self.client.get_pokemons())
             self.agent(self.client.get_agents())
             gui.update_gui()
-            self.client.move()
+            self.main_algorithm()
         exit(0)
 
     def pokemon(self, pokemon_list):
@@ -71,8 +71,13 @@ class Game:
              loc3 = pok.dist_pok_from_ver(ver2)
              loc4 = loc2+loc3
              if abs(loc1-loc4) <= lamda:
-                 pok.src = min(ver1.x, ver2.y)
-                 pok.dest = max(ver1.y, ver2.y)
+                 if pok.type == -1:
+                    pok.src = max(ver1.value, ver2.value)
+                    pok.dest = min(ver1.value, ver2.value)
+                 else:
+                    pok.src = min(ver1.value, ver2.value)
+                    pok.dest = max(ver1.value, ver2.value)
+
 
     def dist_of_2_ver(self,ver1: Node, ver2: Node):
         x_v = pow((ver1.x - ver2.x), 2)
@@ -100,7 +105,7 @@ class Game:
         for p in self.pokemons:
             list.append(p)
         for p in list:
-            for j in range(0, len(self.pokemons) - p - 1):
+            for j in range(0, len(self.pokemons) - list.index(p) - 1):
                 value1 = list[j].value
                 value2 = list[j + 1].value
                 if value1 > value2:
@@ -113,7 +118,7 @@ class Game:
             list.append(p)
 
         for p in list:
-            for j in range(0, len(self.sort_pokemon()) - p - 1):
+            for j in range(0, len(self.sort_pokemon()) - list.index(p) - 1):
                 time1 = self.time_from_agent_to_pok(agent, list[j])
                 time2 = self.time_from_agent_to_pok(agent, list[j + 1])
                 if time1 < time2:
@@ -124,14 +129,18 @@ class Game:
         # returns list with points for pokimons, when the index is bigger so is the points
 
     def points_for_best(self, agent: Agent):
-        point_list = []
+        point_list = {}
         for dis in self.sort_dist_from_pok(agent):
             for pok in self.sort_pokemon():
                 if dis == pok:
                     points = self.sort_dist_from_pok(agent).index(dis) + self.sort_pokemon().index(pok)
                     point_list[points] = pok
-
-        return point_list
+        l = list(point_list.keys())
+        l.sort()
+        l2 = []
+        for i in l:
+            l2.append(point_list.get(i))
+        return l2
 
     def allocate(self, a: Agent):
         length = len(self.points_for_best(a))
@@ -188,9 +197,9 @@ class Game:
         a.pok
         """
     def main_algorithm(self):
-        for agent in self.agents.values():
+        for agent in self.agents:
             if agent.dest == -1:
-                path = DIJKSTRA.shortest_path(agent.src, self.allocate(agent))[1]
+                path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, self.allocate(agent))[1]
                 next_node = path[1]
                 self.client.choose_next_edge(
                     '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
