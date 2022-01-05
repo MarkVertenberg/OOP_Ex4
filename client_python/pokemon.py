@@ -1,6 +1,8 @@
 import math
 
-from OOP_Ex4.client_python.DiGraph import Node
+from client_python.DiGraph import Node
+
+EPSILON = 0.0000001
 
 
 class Pokemon:
@@ -12,18 +14,12 @@ class Pokemon:
         loc = pos.split(',')
         self.x = float(loc[0])
         self.y = float(loc[1])
-        self.src = self.src_node()
-        self.dest = self.dest_node()
-        self.agent = None
+        self.src = None
+        self.dest = None
+        self.waiting_for = None
 
     def dist_pok_from_ver(self, ver: Node):
         x_v = pow(self.x - ver.x, 2)
         y_v = pow(self.y - ver.y, 2)
         dist = math.sqrt(x_v + y_v)
         return dist
-
-    def src_node(self):
-        return None
-
-    def dest_node(self):
-        return None

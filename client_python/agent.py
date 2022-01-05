@@ -9,7 +9,7 @@ class Agent:
         loc = pos.split(',')
         self.x = float(loc[0])
         self.y = float(loc[1])
-        self.pokemon = None
+        self.target = None
 
     def id(self):
         return self.id

@@ -81,7 +81,7 @@ class DiGraph(GraphInterface):
 
 class Node:
     def __init__(self, value, dist: tuple = None):
-        from OOP_Ex4.graphics.NodePainter import NodePainter
+        from graphics.NodePainter import NodePainter
         self.value = value
         self.outWard = {}
         self.inWard = {}

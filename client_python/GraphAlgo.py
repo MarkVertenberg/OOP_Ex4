@@ -4,8 +4,8 @@ import json
 import random
 
 from GraphAlgoInterface import GraphAlgoInterface
-from OOP_Ex4.client_python.Dijkstra import Dijkstra
-from OOP_Ex4.client_python.DiGraph import DiGraph
+from client_python.Dijkstra import Dijkstra
+from client_python.DiGraph import DiGraph
 
 DIJKSTRA = Dijkstra()
 

@@ -1,4 +1,4 @@
-from OOP_Ex4.graphics import Scale
+from graphics import Scale
 
 
 class Scalable:

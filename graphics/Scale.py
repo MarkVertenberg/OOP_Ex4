@@ -1,4 +1,4 @@
-from OOP_Ex4.client_python.GraphInterface import GraphInterface
+from client_python.GraphInterface import GraphInterface
 
 
 class Scale:

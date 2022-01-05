@@ -1,15 +1,15 @@
 import math
 
-from OOP_Ex4.client_python.agent import Agent
-from OOP_Ex4.client_python.DiGraph import Node
-from OOP_Ex4.client_python.GraphAlgo import GraphAlgo
-from OOP_Ex4.client_python.pokemon import Pokemon
-from OOP_Ex4.client_python.client import Client
-from OOP_Ex4.client_python.GraphGUI import GraphGUI
+from client_python.agent import Agent
+from client_python.DiGraph import Node
+from client_python.GraphAlgo import GraphAlgo
+from client_python.pokemon import Pokemon
+from client_python.client import Client
+from client_python.GraphGUI import GraphGUI
 import json
-from OOP_Ex4.client_python.Dijkstra import Dijkstra
+from client_python.Dijkstra import Dijkstra
 
-lamda = 0.001
+lamda = 0.0000000001
 
 DIJKSTRA = Dijkstra()
 # init pygame
@@ -30,7 +30,6 @@ class Game:
         self.agents = []
         self.pokemons = []
         self.unit = []
-        self.agents = {}
 
     def run_game(self):
         self.client.start_connection(HOST, PORT)
@@ -46,25 +45,27 @@ class Game:
         gui = GraphGUI(self)
         gui.start_gui()
         while self.client.is_running() == "true":
-            self.pokemon(self.client.get_pokemons())
-            self.agent(self.client.get_agents())
+            self.get_pokemons(self.client.get_pokemons())
+            self.get_agents()
             gui.update_gui()
-            # self.main_algorithm()
+            self.main_algorithm()
         exit(0)
 
-    def pokemon(self, pokemon_list):
+    def get_pokemons(self, pokemon_list):
         json_pokemons = json.loads(pokemon_list)
         self.pokemons = []
         for p in json_pokemons['Pokemons']:
-            self.pokemons.append(Pokemon(p['Pokemon']))
+            pok = Pokemon(p['Pokemon'])
+            self.find_src_dest_of_pok(pok)
+            self.pokemons.append(pok)
 
-    def agent(self, agent_list):
-        json_agent = json.loads(agent_list)
+    def get_agents(self):
+        json_agent = json.loads(self.client.get_agents())
         self.agents = []
         for e in json_agent['Agents']:
             self.agents.append(Agent(e['Agent']))
 
-    def find_src_dest_of_pok(self, pok: pokemon):
+    def find_src_dest_of_pok(self, pok: Pokemon):
         for ver1 in list(self.graph_algo.get_graph().get_all_v().values()):
             for ver2 in list(self.graph_algo.get_graph().get_all_v().values()):
                 loc1 = ver1.distance(ver2)
@@ -132,8 +133,22 @@ class Game:
         return l2
 
     def allocate(self, a: Agent):
-        a.pokemon = self.points_for_best(a)[-1]
-        return a.pokemon.src
+        min_time = float('inf')
+        close_pok = None
+        for pok in self.pokemons:
+            if pok.waiting_for is None:
+                time = self.time_from_agent_to_pok(a, pok)
+                if time < min_time:
+                    close_pok = pok
+                    min_time = time
+        if close_pok:
+            a.target = close_pok
+            close_pok.waiting_for = a
+
+    def is_collected(self, a: Agent):
+        if a.src is not None and a.target is not None:
+            if a.src == a.target.dest:
+                a.target = None
 
     """ def find_best_agent(self, pok: Pokemon):
            min = float('inf')
@@ -186,10 +201,17 @@ class Game:
     def main_algorithm(self):
         for agent in self.agents:
             if agent.dest == -1:
-                path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, self.allocate(agent))[1]
-                next_node = path[1]
-                self.client.choose_next_edge(
-                    '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
+                # self.is_collected(agent)
+                self.allocate(agent)
+                if agent.target:
+                    if agent.src == agent.target.src:
+                        print(agent.target.dest)
+                        next_node = agent.target.dest
+                    else:
+                        print('pass2')
+                        path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, agent.target.src)[1]
+                        next_node = path[1]
+                    self.client.choose_next_edge('{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
 

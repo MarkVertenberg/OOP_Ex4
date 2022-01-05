@@ -1,6 +1,6 @@
 import pygame
 
-from OOP_Ex4.graphics import *
+from graphics import *
 
 WIDTH = 1080
 HEIGHT = 720

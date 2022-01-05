@@ -1,10 +1,10 @@
 import pygame
 
-from OOP_Ex4.graphics import Scale
-from OOP_Ex4.graphics.Text import Text
-from OOP_Ex4.graphics.Colors import *
-from OOP_Ex4.client_python.DiGraph import Node
-from OOP_Ex4.graphics.api import *
+from graphics import Scale
+from graphics.Text import Text
+from graphics.Colors import *
+from client_python.DiGraph import Node
+from graphics.api import *
 
 
 class NodePainter(ScreenObjectInterface, Scalable):

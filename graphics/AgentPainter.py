@@ -1,10 +1,10 @@
 import pygame
 
-from OOP_Ex4.client_python.agent import Agent
-from OOP_Ex4.graphics.Text import Text
-from OOP_Ex4.graphics.Scale import Scale
-from OOP_Ex4.graphics.api import *
-from OOP_Ex4.graphics.Colors import *
+from client_python.agent import Agent
+from graphics.Text import Text
+from graphics.Scale import Scale
+from graphics.api import *
+from graphics.Colors import *
 
 
 class AgentPainter(ScreenObjectInterface, Scalable):
