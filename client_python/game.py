@@ -124,8 +124,8 @@ class Game:
 
         # the time for agent to get to to pokemon
 
-    def time_from_agent_to_pok(self, agent: Agents, pok: pokemon):
-        dist = DIJKSTRA.shortest_path(self.Graphalgo.get_graph(), agent.src, pok.src)[0]
+    def time_from_agent_to_pok(self, agent: Agent, pok: Pokemon):
+        dist = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, pok.src)[0]
         speed = agent.speed
         return dist / speed
 
@@ -140,7 +140,7 @@ class Game:
                 a = agent
         pok.agent = a
 
-    def find_best_pokemon(self, a: Agents):
+    def find_best_pokemon(self, a: Agent):
         max = 0
         pok = None
         for p in self.pokemons.values():
