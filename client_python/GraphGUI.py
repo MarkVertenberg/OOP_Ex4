@@ -1,6 +1,9 @@
+from typing import List
+
 import pygame
 
 from graphics import *
+from graphics import Button, Text
 
 WIDTH = 1080
 HEIGHT = 720
@@ -11,22 +14,21 @@ REFRESH_RATE = 10
 
 class GraphGUI:
 
+    pygame.init()
+    pygame.display.set_caption("Pokemon Game")
+    icon = pygame.image.load('../graphics/images/pokemon_icon.png')
+    pygame.display.set_icon(icon)
+
     def __init__(self, game):
         self.game = game
         self.graph_algo = game.graph_algo
-        self.screen_obj = []
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+        menu_obj: List[ScreenObjectInterface | Scalable]
+        menu_obj, self.length = self.create_objects()
+        self.screen_obj = menu_obj
         self.scalable_obj = []
-        self.screen = None
-        self.running = False
-        self.clock = pygame.time.Clock()
-
-    def start_gui(self, width=GRAPH_WIDTH, height=HEIGHT):
-        pygame.init()
-        pygame.display.set_caption("Pokemon Game")
-        icon = pygame.image.load('../graphics/images/pokemon_icon.png')
-        pygame.display.set_icon(icon)
-        self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         self.running = True
+        self.clock = pygame.time.Clock()
 
     def update_gui(self):
         if self.running:
@@ -55,9 +57,8 @@ class GraphGUI:
 
     def init_screen_objects(self):
         nodes = list(self.graph_algo.get_graph().get_all_v().values())
-        self.screen_obj = []
-        for obj in self.create_objects():
-            self.screen_obj.append(obj)
+        self.screen_obj = self.screen_obj[0: self.length]
+        self.update_data()
         for node in nodes:
             node.painter = NodePainter(node)
             self.screen_obj.append(node.painter)
@@ -76,9 +77,9 @@ class GraphGUI:
             node.painter = NodePainter(node)
             self.scalable_obj.append(node.painter)
         for pokemon in self.game.pokemons:
-            self.screen_obj.append(PokemonPainter(pokemon))
+            self.scalable_obj.append(PokemonPainter(pokemon))
         for agent in self.game.agents:
-            self.screen_obj.append(AgentPainter(agent))
+            self.scalable_obj.append(AgentPainter(agent))
 
     def find_border(self):
         border = 0
@@ -89,7 +90,17 @@ class GraphGUI:
 
     def create_objects(self):
         width, height = self.screen.get_size()[0], self.screen.get_size()[1]
-        stop_button = Button(WHITE, width - 120, 10, 80, 30, 'STOP', text_size=36)
-        score = Text(80, 25, 'Score: ' + str(self.game.get_score()))
-        time = Text(width / 2, 25, f'Time to End: {self.game.time_remaining()}ms')
-        return [stop_button, score, time]
+        lst_obj = [Button(WHITE, width - 120, 10, 80, 30, 'STOP', text_size=36, function=self.game.client.stop),
+                   Text(80, 25, 'Score: ' + str(self.game.get_score())),
+                   Text(200, 25, 'Moves: ' + str(self.game.get_moves())),
+                   Text(width / 2, 25, f'Time to End: {str(int(self.game.time_remaining()) / 100.0)} seconds')]
+        return lst_obj, len(lst_obj)
+
+    def update_data(self):
+        width = self.screen.get_size()[0]
+        self.screen_obj[0].x = width - 120
+        self.screen_obj[1].text = 'Score: ' + str(self.game.get_score())
+        self.screen_obj[2].text = 'Moves: ' + str(self.game.get_moves())
+        self.screen_obj[3].text = f'Time to End: {str(int(self.game.time_remaining()) / 1000.0)} seconds'
+        self.screen_obj[3].x = width / 2
+

@@ -9,7 +9,7 @@ class Button(ScreenObjectInterface):
         Class that representing a button in pygame.
     """
 
-    def __init__(self, color, x, y, width, height, text='', text_color=BLACK, text_size=48):
+    def __init__(self, color, x, y, width, height, text='', text_color=BLACK, text_size=48, function=None):
         self.color = color
         self.x = x
         self.y = y
@@ -17,6 +17,7 @@ class Button(ScreenObjectInterface):
         self.height = height
         self.text = Text(x + (width / 2), y + (height / 2), text, text_size, text_color)
         self.is_clicked = False
+        self.function = function
 
     def handle_event(self, event):
         pos = pygame.mouse.get_pos()
@@ -24,6 +25,7 @@ class Button(ScreenObjectInterface):
             if self.is_over(pos):
                 print(self.text.text + " button is clicked!")
                 self.is_clicked = True
+                self.function()
         if event.type == pygame.MOUSEMOTION:
             if self.is_over(pos):
                 self.text.color = LIGHT_RED

@@ -8,6 +8,7 @@ from client_python.Dijkstra import Dijkstra
 
 lamda = 0.000000000001
 
+
 DIJKSTRA = Dijkstra()
 # init pygame
 WIDTH, HEIGHT = 1080, 720
@@ -40,7 +41,6 @@ class Game:
         self.graph_algo.load_from_json(file_location)
         self.client.start()
         gui = GraphGUI(self)
-        gui.start_gui()
         while self.client.is_running() == "true":
             self.get_pokemons(self.client.get_pokemons())
             self.get_agents()
@@ -147,6 +147,7 @@ class Game:
             if a.src == a.target.dest:
                 a.target = None
 
+
     """ def find_best_agent(self, pok: Pokemon):
            min = float('inf')
            a = None
@@ -207,14 +208,15 @@ class Game:
                         path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, agent.target.src)[1]
                         next_node = path[1]
                     self.client.choose_next_edge('{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
-                ttl = self.client.time_to_end()
-                print(ttl, self.client.get_info())
-
         self.client.move()
 
     def get_score(self):
         json_grade = json.loads(self.client.get_info())
         return json_grade['GameServer']['grade']
+
+    def get_moves(self):
+        json_grade = json.loads(self.client.get_info())
+        return json_grade['GameServer']['moves']
 
     def time_remaining(self):
         return self.client.time_to_end()
