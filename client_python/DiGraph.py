@@ -1,7 +1,7 @@
 import math
 
 
-from client_python.GraphInterface import GraphInterface
+from GraphInterface import GraphInterface
 
 
 class DiGraph(GraphInterface):
