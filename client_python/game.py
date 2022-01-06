@@ -6,7 +6,7 @@ from client_python.GraphGUI import GraphGUI
 import json
 from client_python.Dijkstra import Dijkstra
 
-lamda = 0.000000000001
+LAMDA = 0.000000000001
 
 DIJKSTRA = Dijkstra()
 # init pygame
@@ -66,7 +66,7 @@ class Game:
                 loc2 = pok.dist_pok_from_ver(ver1)
                 loc3 = pok.dist_pok_from_ver(ver2)
                 loc4 = loc2 + loc3
-                if abs(loc1 - loc4) <= lamda:
+                if abs(loc1 - loc4) <= LAMDA:
                     if pok.type == -1:
                         pok.src = max(ver1.value, ver2.value)
                         pok.dest = min(ver1.value, ver2.value)
