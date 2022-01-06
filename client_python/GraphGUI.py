@@ -16,7 +16,7 @@ class GraphGUI:
 
     pygame.init()
     pygame.display.set_caption("Pokemon Game")
-    icon = pygame.image.load('../images/pokemon_icon.png')
+    icon = pygame.image.load('../graphics/images/pokemon_icon.png')
     pygame.display.set_icon(icon)
 
     def __init__(self, game):
