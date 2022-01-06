@@ -202,10 +202,8 @@ class Game:
                 self.allocate(agent)
                 if agent.target:
                     if agent.src == agent.target.src:
-                        print(agent.target.dest)
                         next_node = agent.target.dest
                     else:
-                        print('pass2')
                         path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, agent.target.src)[1]
                         next_node = path[1]
                     self.client.choose_next_edge('{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
