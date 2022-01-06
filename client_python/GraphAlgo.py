@@ -1,9 +1,7 @@
-import queue
 from typing import List
 import json
-import random
 
-from GraphAlgoInterface import GraphAlgoInterface
+from client_python.GraphAlgoInterface import GraphAlgoInterface
 from client_python.Dijkstra import Dijkstra
 from client_python.DiGraph import DiGraph
 

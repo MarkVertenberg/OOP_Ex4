@@ -1,6 +1,6 @@
 from typing import List
 
-from GraphInterface import GraphInterface
+from client_python.GraphInterface import GraphInterface
 
 
 class Dijkstra:
