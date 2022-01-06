@@ -36,6 +36,106 @@ This project is a concluding assignment of the Object Oriented Programming (OOP)
 
 # Algorithm:
 
+**The function below responsible for running the game:**
+
+     def run_game(self):
+         self.client.start_connection(HOST, PORT)
+         self.client.add_agent("{\"id\":0}")
+         self.client.add_agent("{\"id\":1}")
+         self.client.add_agent("{\"id\":2}")
+         self.client.add_agent("{\"id\":3}")
+         print(self.graph_algo.load_from_json(self.get_graph_file_name()))
+         self.client.start()
+         gui = GraphGUI(self)
+         while self.client.is_running() == "true":
+             self.get_pokemons(self.client.get_pokemons())
+             self.get_agents()
+             gui.update_gui()
+             self.main_algorithm()
+             print(self.time_remaining(), self.client.get_info())
+         self.client.stop_connection()
+         exit(0)
+
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below loads the Pokemons from the json files:**
+
+    def get_pokemons(self, pokemon_list):
+        json_pokemons = json.loads(pokemon_list)
+        self.pokemons = []
+        for p in json_pokemons['Pokemons']:
+            pok = Pokemon(p['Pokemon'])
+            self.find_src_dest_of_pok(pok)
+            self.pokemons.append(pok)
+
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below loads the agents from the json file:**
+
+    def get_agents(self):
+        json_agent = json.loads(self.client.get_agents())
+        self.agents = []
+        for e in json_agent['Agents']:
+            self.agents.append(Agent(e['Agent']))
+            
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below finds the destination and source of Pokemon:**         
+
+    def find_src_dest_of_pok(self, pok: Pokemon):
+        for ver1 in list(self.graph_algo.get_graph().get_all_v().values()):
+            for ver2 in list(self.graph_algo.get_graph().get_all_v().values()):
+                loc1 = ver1.distance(ver2)
+                loc2 = pok.dist_pok_from_ver(ver1)
+                loc3 = pok.dist_pok_from_ver(ver2)
+                loc4 = loc2 + loc3
+                if abs(loc1 - loc4) <= lamda:
+                    if pok.type == -1:
+                        pok.src = max(ver1.value, ver2.value)
+                        pok.dest = min(ver1.value, ver2.value)
+                    else:
+                        pok.src = min(ver1.value, ver2.value)
+                        pok.dest = max(ver1.value, ver2.value)
+                    return
+
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below calculates the time it will take for the agent to reach Pokemon:**
+
+    def time_from_agent_to_pok(self, agent: Agent, pok: Pokemon):
+        dist = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, pok.src)[0]
+        speed = agent.speed
+        return dist / speed
+
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below is responsible for assigning the appropriate agent to the appropriate Pokemon:**
+
+
+    def allocate(self, a: Agent):
+        min_time = float('inf')
+        close_pok = None
+        for pok in self.pokemons:
+            if pok.waiting_for is None:
+                time = self.time_from_agent_to_pok(a, pok)
+                if time < min_time:
+                    close_pok = pok
+                    min_time = time
+        if close_pok:
+            a.target = close_pok
+            close_pok.waiting_for = a
+
+_________________________________________________________________________________________________________________________________________________________________________________
+**The function below is responsible for moving the agent to the Pokemon to which it is sent:**
+
+    def main_algorithm(self):
+        for agent in self.agents:
+            self.allocate(agent)
+            if agent.dest == -1:
+                if agent.target:
+                    if agent.src == agent.target.src:
+                        next_node = agent.target.dest
+                    else:
+                        path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, agent.target.src)[1]
+                        next_node = path[1]
+                    self.client.choose_next_edge(
+                        '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
+        self.client.move()
 
 # UML:
 
