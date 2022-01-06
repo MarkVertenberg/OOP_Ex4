@@ -39,7 +39,7 @@ This project is a concluding assignment of the Object Oriented Programming (OOP)
 
 # UML:
 
-![Untitled Diagram drawio (5)](https://user-images.githubusercontent.com/93255163/148453212-3a814cfd-9a42-4c3c-95a7-1e9265982712.png)
+![Untitled Diagram drawio (6)](https://user-images.githubusercontent.com/93255163/148453646-cd74b33b-83e1-4ad5-8df7-b540a600bab4.png)
 
 
 # Report results:
