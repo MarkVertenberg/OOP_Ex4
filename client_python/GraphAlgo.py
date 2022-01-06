@@ -20,10 +20,6 @@ class GraphAlgo(GraphAlgoInterface):
         return self.graph
 
     def load_from_json(self, file_name: str):
-        file = file_name
-        s = file[-4:]
-        if s != "json":
-            file_name = file_name+".json"
         try:
             self.graph = DiGraph()
             with open(file_name, "r") as a:

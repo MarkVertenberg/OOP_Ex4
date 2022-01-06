@@ -8,11 +8,9 @@ from client_python.Dijkstra import Dijkstra
 
 lamda = 0.000000000001
 
-
 DIJKSTRA = Dijkstra()
 # init pygame
 WIDTH, HEIGHT = 1080, 720
-
 
 # default port
 PORT = 6666
@@ -35,8 +33,7 @@ class Game:
         self.client.add_agent("{\"id\":1}")
         self.client.add_agent("{\"id\":2}")
         self.client.add_agent("{\"id\":3}")
-        file = self.get_graph_file_name()
-        print(self.graph_algo.load_from_json("../data/A2"))
+        print(self.graph_algo.load_from_json(self.get_graph_file_name()))
         self.client.start()
         gui = GraphGUI(self)
         while self.client.is_running() == "true":
@@ -68,8 +65,8 @@ class Game:
                 loc1 = ver1.distance(ver2)
                 loc2 = pok.dist_pok_from_ver(ver1)
                 loc3 = pok.dist_pok_from_ver(ver2)
-                loc4 = loc2+loc3
-                if abs(loc1-loc4) <= lamda:
+                loc4 = loc2 + loc3
+                if abs(loc1 - loc4) <= lamda:
                     if pok.type == -1:
                         pok.src = max(ver1.value, ver2.value)
                         pok.dest = min(ver1.value, ver2.value)
@@ -107,7 +104,8 @@ class Game:
                     else:
                         path = DIJKSTRA.shortest_path(self.graph_algo.get_graph(), agent.src, agent.target.src)[1]
                         next_node = path[1]
-                    self.client.choose_next_edge('{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
+                    self.client.choose_next_edge(
+                        '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
         self.client.move()
 
     def get_score(self):
@@ -116,7 +114,7 @@ class Game:
 
     def get_graph_file_name(self):
         json_graph_file = json.loads(self.client.get_info())
-        return "../data/A2"
+        return "../" + json_graph_file['GameServer']['graph']
 
     def get_moves(self):
         json_moves = json.loads(self.client.get_info())
@@ -128,4 +126,3 @@ class Game:
 
 game = Game()
 game.run_game()
-    

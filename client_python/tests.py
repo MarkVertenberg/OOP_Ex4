@@ -61,7 +61,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_game(self):
             test_graph = GraphAlgo()
-            test_graph.load_from_json('../data/A0.json')
+            test_graph.load_from_json('../data/A0')
             node1 = Node(1, (1.0, 2.0))
             node2 = Node(2, (5.0, 4.0))
             node3 = Node(3, (2.0, 6.0))
