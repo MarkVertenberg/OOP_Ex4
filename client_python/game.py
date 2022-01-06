@@ -1,7 +1,4 @@
-import math
-
 from client_python.agent import Agent
-from client_python.DiGraph import Node
 from client_python.GraphAlgo import GraphAlgo
 from client_python.pokemon import Pokemon
 from client_python.client import Client

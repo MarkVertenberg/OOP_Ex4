@@ -14,6 +14,7 @@ class PokemonPainter(ScreenObjectInterface, Scalable):
         self.radius = radius
         self.color = color
         self.text = Text(pokemon.x, pokemon.y, str(pokemon.value), 14)
+        self.text_type = Text(pokemon.x, pokemon.y - radius, f'{str(pokemon.src)}->{str(pokemon.dest)}', 12, SKY_BLUE)
         self.new_x = None
         self.new_y = None
 
@@ -21,10 +22,13 @@ class PokemonPainter(ScreenObjectInterface, Scalable):
         if self.new_x and self.new_y:
             self.text.x = self.new_x
             self.text.y = self.new_y
+            self.text_type.x = self.new_x
+            self.text_type.y = self.new_y - self.radius - 5
             if outline:
                 pygame.draw.circle(screen, BLACK, (self.new_x, self.new_y), self.radius + outline)
             pygame.draw.circle(screen, self.color, (self.new_x, self.new_y), self.radius)
             self.text.draw(screen)
+            self.text_type.draw(screen)
 
     def handle_event(self, event):
         pass
