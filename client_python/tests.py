@@ -6,10 +6,6 @@ from pokemon import Pokemon
 from agent import Agent
 
 
-# default port
-PORT = 6666
-# server host (default localhost 127.0.0.1)
-HOST = '127.0.0.1'
 
 class MyTestCase(unittest.TestCase):
     def test_Node(self):
@@ -25,7 +21,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_DiGraph(self):
         test_graph = GraphAlgo()
-        test_graph.load_from_json('../data/A0.json')
+        test_graph.load_from_json('../data/A0')
         self.assertEqual(test_graph.graph.v_size(), 11)
         self.assertEqual(test_graph.graph.e_size(), 22)
         self.assertEqual(len(test_graph.graph.get_all_v()), 11)
@@ -42,8 +38,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_GraphAlgo(self):
         test_graph = GraphAlgo()
-        self.assertTrue(test_graph.load_from_json('../data/A0.json'))
-        self.assertTrue(test_graph.save_to_json("saved_file.json"))
+        self.assertTrue(test_graph.load_from_json('../data/A0'))
+        self.assertTrue(test_graph.save_to_json("saved_file"))
         test_graph2 = GraphAlgo()
         test_graph2.graph.add_node(0)
         test_graph2.graph.add_node(1)
@@ -122,9 +118,9 @@ class MyTestCase(unittest.TestCase):
             dist_ag_to_pok = test_graph.shortest_path(ag.src, poki.src)[0]
             dist_ag_to_pok1 = test_graph.shortest_path(ag1.src, poki.src)[0]
             dist_ag_to_pok2 = test_graph.shortest_path(ag2.src, poki.src)[0]
-            self.assertEqual(float("inf"), dist_ag_to_pok)
-            self.assertEqual(float("inf"), dist_ag_to_pok1)
-            self.assertEqual(float("inf"), dist_ag_to_pok2)
+            self.assertEqual(1.4620268165085584, dist_ag_to_pok)
+            self.assertEqual(3.350492768651911, dist_ag_to_pok1)
+            self.assertEqual(3.350492768651911, dist_ag_to_pok2)
 
             """   g = game()
             g.client.start_connection(HOST, PORT)
