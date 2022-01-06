@@ -142,6 +142,28 @@ class Game:
             a.target = close_pok
             close_pok.waiting_for = a
 
+    def find_pok(self, a: Agent):
+        min_time = float('inf')
+        close_pok = None
+        for pok in self.pokemons:
+            if pok.waiting_for is None:
+                time = self.time_from_agent_to_pok(a, pok)
+                if time < min_time:
+                    close_pok = pok
+                    min_time = time
+        if close_pok:
+         return close_pok
+
+    def find_best_agent(self, pok: Pokemon):
+        min = float('inf')
+        a = None
+        for agent in self.agents:
+            time = self.time_from_agent_to_pok(agent, pok)
+            if time < min:
+                min = time
+                a = agent
+        return a
+
     def is_collected(self, a: Agent):
         if a.src is not None and a.target is not None:
             if a.src == a.target.dest:
@@ -197,8 +219,11 @@ class Game:
         a.pok
         """
     def main_algorithm(self):
+        #
         for agent in self.agents:
-            self.allocate(agent)
+            self.find_best_agent(self.find_pok(agent))
+            self.find_best_agent(self.find_pok(agent)).target = self.find_pok(agent)
+            self.find_pok(agent).waiting_for = self.find_best_agent(self.find_pok(agent))
             if agent.dest == -1:
                 if agent.target:
                     if agent.src == agent.target.src:
