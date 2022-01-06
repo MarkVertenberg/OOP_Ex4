@@ -45,7 +45,6 @@ class GraphAlgo(GraphAlgoInterface):
                     self.graph.add_edge(src, dest, w)
         except IOError:
             return False
-
         return True
 
     def save_to_json(self, file_name: str):
@@ -121,11 +120,3 @@ class GraphAlgo(GraphAlgoInterface):
                 N = Node
         return N, min
 
-    def plot_graph(self):
-        from GraphGUI import GraphGUI
-        gui = GraphGUI(self)
-        for node in self.graph.get_all_v().values():
-            if not node.get_y() and not node.get_x():
-                node.x = random.randint(0, gui.WIDTH)
-                node.y = random.randint(0, gui.HEIGHT)
-        gui.plot_graph()
